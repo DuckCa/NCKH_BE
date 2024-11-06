@@ -6,12 +6,16 @@ const express = require("express");
 const app = express();
 const loginRoutes = require("./Routes/loginApi");
 const roleRoutes = require("./Routes/roleApi");
+const accRoutes = require("./Routes/accApi");
 const conn = require("./config/database");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/");
 app.use("/login", loginRoutes);
-app.use("/role", roleRoutes);
-
+app.use("/user", accRoutes);
+app.use("/user/sale"); //không cần accrount vì cả sale và manager đều bắt đầu từ user
+app.use("/user/manager");
+app.use("/user/admin", roleRoutes);
 (async () => {
   try {
     //Connect for mongonoose

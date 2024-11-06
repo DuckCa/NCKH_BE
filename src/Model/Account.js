@@ -22,7 +22,11 @@ const accountSchema = mongoose.Schema(
     coin: mongoose.Schema.Types.Decimal128,
     level: Number,
     bio: String,
-    portfolio: [{ type: mongoose.Schema.Types.ObjectId, ref: "item" }],
+    portfolio: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "item",
+      default: null,
+    },
   },
   {
     timestamps: true,
