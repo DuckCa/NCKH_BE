@@ -15,20 +15,25 @@ const itemSchema = mongoose.Schema(
     artist: [{ type: mongoose.Schema.Types.ObjectId, ref: "account" }],
     category: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
     price: {
-      type: Decimal,
+      type: mongoose.Schema.Types.Decimal128,
       default: 100000,
     },
+
     like: {
-      type: Decimal,
+      type: mongoose.Schema.Types.Decimal128,
       default: 0,
     },
     vote: {
-      type: Decimal,
+      type: mongoose.Schema.Types.Decimal128,
       default: 0,
     },
     state: {
       type: String,
       default: "Available",
+    },
+    url: {
+      type: String,
+      required: true,
     },
   },
   {

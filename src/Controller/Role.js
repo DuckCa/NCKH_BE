@@ -1,5 +1,6 @@
 const {
   getRoleList,
+  getMatchRoleList,
   addRoleService,
   updateRoleService,
   deleteRoleService,
@@ -8,6 +9,15 @@ const {
 const getRoles = async (req, res) => {
   try {
     const data = await getRoleList(req);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error retrieving roles" });
+  }
+};
+const getMatchRoles = async (req, res) => {
+  try {
+    const data = await getMatchRoleList(req);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -48,4 +58,4 @@ const deleteRole = async (req, res) => {
   }
 };
 
-module.exports = { getRoles, putRole, postRole, deleteRole };
+module.exports = { getRoles, getMatchRoles, putRole, postRole, deleteRole };

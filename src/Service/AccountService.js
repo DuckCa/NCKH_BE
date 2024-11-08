@@ -59,9 +59,9 @@ const addAccountService = async (userName, email, password, bio, roleId) => {
 
 const deleteAccountService = async (_id) => {
   const account = await Account.findById(_id);
-  const data = await Account.deleteOne({ _id: _id });
-  const delMatchRole = await matchRole.deleteOne({ accountId: _id });
-  const delCart = await Cart.deleteOne({ _id: account.cart });
+  const data = await Account.delete({ _id: _id });
+  const delMatchRole = await matchRole.delete({ accountId: _id });
+  const delCart = await Cart.delete({ _id: account.cart });
   console.log(`>>>>>>>>CHECK cartId: ${account.cart}; CHECK ID ${_id}`);
   return data;
 };
