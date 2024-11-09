@@ -1,6 +1,7 @@
 const Item = require("../Model/Item");
 const matchRole = require("../Model/MatchRole");
 const Cart = require("../Model/Cart");
+const { json } = require("express");
 const getItemList = async (req) => {
   const data = await Item.find();
   return data;
@@ -22,16 +23,17 @@ const updateItemService = async (infor) => {
 };
 
 const addItemService = async (infor) => {
+  console.log(">>>>>>>>>>>>CHECKKKKKKK ITEM INFOR:", infor);
   const data = await Item.create({
     name: infor.name,
     description: infor.description,
-    artist: infor.artist,
+    artist: JSON.parse(infor.artist),
     category: infor.portfolio ? mongoose.Types.ObjectId(infor.portfolio) : null,
     price: infor.price,
     url: infor.url,
   });
 
-  return `${JSON.stringify(data)}`;
+  return data;
 };
 
 const deleteItemService = async (_id) => {

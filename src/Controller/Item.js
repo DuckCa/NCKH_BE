@@ -45,17 +45,27 @@ const putItem = async (req, res) => {
 
 const postItem = async (req, res) => {
   try {
-    console.log(">>>>>>>>CHECK FILE:", req.files);
-    const file = await uploadSingleFile(req.files);
+    const file = await uploadSingleFile(req.files.url);
     const { name, description, artist, category, price } = req.body;
-    const data = await addItemService(
+
+    const url = file.path;
+    console.log(
+      ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
       name,
       description,
-      JSON.parse(artist),
-      JSON.parse(category),
+      artist,
+      category,
       price,
-      file.path
+      url
     );
+    const data = await addItemService({
+      name,
+      description,
+      artist,
+      category,
+      price,
+      url,
+    });
 
     return res.status(200).json(data);
   } catch (error) {

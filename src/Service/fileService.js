@@ -6,7 +6,7 @@ const uploadSingleFile = async (fileObject) => {
   let basename = path.basename(fileObject.name, extname);
   let realname = JSON.stringify(basename + "-" + Date.now() + extname);
   console.log(">>>>>>Chech real name:", realname);
-  let uploadPath = path.resolve(__dirname, "../public/images/uploads/");
+  let uploadPath = path.resolve(__dirname, "../Public/Items_e_commerce/");
   console.log(">>>>>>>>CHECK URL:", uploadPath);
   try {
     await fileObject.mv(path.join(uploadPath, JSON.parse(realname)));
@@ -73,6 +73,9 @@ const uploadMultipleFile = async (fileArray) => {
     path: "link-image", // Bạn có thể thay đổi đường dẫn này để phản ánh đúng đường dẫn URL
     error: null,
   };
+};
+const findOneFile = async (data) => {
+  return null;
 };
 
 module.exports = {
