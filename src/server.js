@@ -13,10 +13,10 @@ const conn = require("./config/database");
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use("/");
+// app.use("/",);
 app.use("/login", loginRoutes);
 app.use("/user", accRoutes);
-app.use("/user/sale", itemRoutes); //không cần accrount vì cả sale và manager đều bắt đầu từ user
+app.use("/user/sale", itemRoutes);//không cần account vì cả sale và manager đều bắt đầu từ user
 // app.use("/user/manager");
 app.use("/user/admin", roleRoutes);
 
