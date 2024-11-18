@@ -3,7 +3,7 @@ const matchRole = require("../Model/MatchRole");
 const Cart = require("../Model/Cart");
 const { default: mongoose } = require("mongoose");
 const getAccountList = async (req) => {
-  const data = await Account.find(); // Sử dụng await
+  const data = await Account.findAll();
   return data;
 };
 
@@ -31,7 +31,14 @@ const updateAccountService = async (infor) => {
   }
 };
 //Function dành cho admin để tạo các account đặc biệt
-const addAccountService = async (userName, email, password, bio, roleId) => {
+const addAccountService = async (
+  userName,
+  email,
+  password,
+  bio,
+  userItem,
+  roleId
+) => {
   const cart = await Cart.create({});
   const existingCart = await Cart.findById(cart._id);
   if (!existingCart) {
@@ -41,11 +48,13 @@ const addAccountService = async (userName, email, password, bio, roleId) => {
     console.log("CART CREATED SUCCESS!!!!!");
   }
   const data = await Account.create({
-    userName,
+    _id,
+    username,
     email,
     password,
-    cart: cart._id,
+    cart,
     bio,
+    userItem,
   });
   const matchrole = await matchRole.create({
     accountId: data._id,

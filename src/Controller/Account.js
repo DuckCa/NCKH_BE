@@ -17,8 +17,7 @@ const getAccounts = async (req, res) => {
 
 const putAccount = async (req, res) => {
   try {
-    const { _id, userName, email, password, wishlist, bio, portfolio } =
-      req.body;
+    const { userName, email, password, bio, roleId, userItem } = req.body;
 
     console.log(
       `>>>>>>>>>>>>CHECK: ${_id},${userName} , ${email},${password} ,${wishlist} ,${bio} ,${portfolio} }`
