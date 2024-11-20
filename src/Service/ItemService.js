@@ -24,7 +24,7 @@ const updateItemService = async (infor) => {
 
 const addItemService = async (infor) => {
   console.log(">>>>>>>>>>>>CHECKKKKKKK ITEM INFOR:", infor);
-  const data = await Item.create({
+  const data= await Item.create({
     name: infor.name,
     description: infor.description,
     artist: JSON.parse(infor.artist),

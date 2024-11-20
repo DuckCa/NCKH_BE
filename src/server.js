@@ -9,6 +9,7 @@ const loginRoutes = require("./Routes/loginApi");
 const roleRoutes = require("./Routes/roleApi");
 const accRoutes = require("./Routes/accApi");
 const itemRoutes = require("./Routes/itemApi");
+const requestRouters = require("./Routes/requestApi");
 const conn = require("./config/database");
 app.use(fileUpload());
 app.use(express.json());
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use("/",);
 app.use("/login", loginRoutes);
 app.use("/user", accRoutes);
-app.use("/user/sale", itemRoutes);//không cần account vì cả sale và manager đều bắt đầu từ user
+app.use("/user/sale", itemRoutes,requestRouters);//không cần account vì cả sale và manager đều bắt đầu từ user
 // app.use("/user/manager");
 app.use("/user/admin", roleRoutes);
 
