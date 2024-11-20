@@ -32,7 +32,7 @@ const updateAccountService = async (infor) => {
 };
 //Function dành cho admin để tạo các account đặc biệt
 const addAccountService = async (
-  userName,
+  username,
   email,
   password,
   bio,
@@ -41,18 +41,20 @@ const addAccountService = async (
 ) => {
   const cart = await Cart.create({});
   const existingCart = await Cart.findById(cart._id);
+
   if (!existingCart) {
     console.log("CART WAS NOT CREATED!!!!!");
+
     return Error("Cart was not created successfully.");
   } else {
     console.log("CART CREATED SUCCESS!!!!!");
+    console.log(">>>>>CHECK CART:", existingCart);
   }
   const data = await Account.create({
-    _id,
     username,
     email,
     password,
-    cart,
+    cart: JSON.stringify(cart._id),
     bio,
     userItem,
   });

@@ -2,49 +2,57 @@ const { DataTypes } = require("sequelize");
 // Import the Sequelize Oracle connection instance
 const sequelize = require("../config/databaseOrac");
 
-const Account = sequelize.define("Account", {
-  _id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const Account = sequelize.define(
+  "Account",
+  {
+    _id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cart: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    coin: {
+      type: DataTypes.DECIMAL,
+      defaultValue: 0,
+    },
+    level: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    bio: {
+      type: DataTypes.STRING,
+    },
+    userItem: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
   },
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  cart: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  coin: {
-    type: DataTypes.DECIMAL,
-    defaultValue: 0,
-  },
-  level: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  bio: {
-    type: DataTypes.STRING,
-  },
-  userItem: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-});
+  {
+    tableName: "Accounts",
+    paranoid: true,
+    timestamps: true, // Bật timestamps
+  }
+);
 
 // Synchronize the model with the database
 sequelize.sync({ force: false }).then(() => {

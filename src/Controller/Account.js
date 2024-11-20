@@ -29,7 +29,7 @@ const putAccount = async (req, res) => {
     } else {
       const data = await updateAccountService({
         _id,
-        userName,
+        username,
         email,
         password,
         bio,
@@ -45,13 +45,14 @@ const putAccount = async (req, res) => {
 
 const postAccount = async (req, res) => {
   try {
-    const { userName, email, password, bio, roleId } = req.body;
+    const { username, email, password, bio, roleId, userItem } = req.body;
     const data = await addAccountService(
-      userName,
+      username,
       email,
       password,
       bio,
-      roleId
+      roleId,
+      userItem
     );
     return res.status(200).json(data);
   } catch (error) {
