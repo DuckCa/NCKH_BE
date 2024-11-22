@@ -16,7 +16,7 @@ const uploadSingleFile = async (fileObject) => {
     );
     return {
       status: "success",
-      path: JSON.parse(realname),
+      path: path.join(uploadPath, JSON.parse(realname)),
       error: null,
     };
   } catch (error) {

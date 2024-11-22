@@ -25,7 +25,6 @@ const putItem = async (req, res) => {
     console.log(
       `>>>>>>>>>>>>CHECK: ${_id},${name} , ${description},${artist} ,${category} ,${price} ,${state} }`
     );
-    //Hai loai update, update wishlist va update phan con lai
 
     const data = await updateItemService({
       _id,
