@@ -7,13 +7,20 @@ const MatchRole = sequelize.define(
   {
     accountId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Account", // Tên bảng Account trong cơ sở dữ liệu
+        key: "_id",
+      },
       primaryKey: true,
       allowNull: false,
     },
     roleId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Role", // Tên bảng Role trong cơ sở dữ liệu
+        key: "_id",
+      },
       primaryKey: true,
-      allowNull: false,
       allowNull: false,
     },
   },
@@ -25,7 +32,7 @@ const MatchRole = sequelize.define(
 );
 
 // Synchronize the model with the database
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync().then(() => {
   console.log("User table created!");
 });
 

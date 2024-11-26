@@ -1,12 +1,18 @@
-const Role = require("../Model/Role");
-const matchRole = require("../Model/MatchRole");
-
+const {
+  sequelize,
+  Account,
+  Role,
+  MatchRole,
+  UserItem,
+  RequestHistory,
+  RequestType,
+} = require("../Model/Index");
 const getRoleList = async (req) => {
-  const data = await Role.find(); // Sử dụng await
+  const data = await Role.findAll(); // Sử dụng await
   return data;
 };
 const getMatchRoleList = async (req) => {
-  const data = await matchRole.find(); // Sử dụng await
+  const data = await MatchRole.find(); // Sử dụng await
   return data;
 };
 

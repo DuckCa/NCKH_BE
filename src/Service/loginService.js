@@ -1,4 +1,11 @@
-const Account = require("../Model/Account");
+const {
+  sequelize,
+  Account,
+  Role,
+  MatchRole,
+  UserItem,
+  RequestHistory,
+} = require("../Model/Index");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const registerAccount = async (userName, email, password, role) => {

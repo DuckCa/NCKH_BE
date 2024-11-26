@@ -6,7 +6,7 @@ const {
   registerApi,
   forgetPassword,
 } = require("../Controller/Login");
-router.get("/", getInfor);
+router.get("/login", getInfor);
 router.get("/login", loginApi);
 router.put("/register", registerApi);
 router.get("/forgetpassword", forgetPassword);

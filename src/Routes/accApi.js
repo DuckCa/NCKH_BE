@@ -6,7 +6,7 @@ const {
   postAccount,
   deleteAccount,
 } = require("../Controller/Account");
-router.get("/", getAccounts);
+router.get("/Acc", getAccounts);
 router.put("/Acc", putAccount); // cập nhập data
 router.post("/Acc", postAccount); //thêm data
 router.delete("/Acc", deleteAccount);

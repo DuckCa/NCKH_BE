@@ -22,14 +22,14 @@ const Role = sequelize.define(
     },
   },
   {
-    tableName: "Roles",
+    tableName: "Role",
     paranoid: true,
     timestamps: true, // Bật timestamps
   }
 );
 
 // Synchronize the model with the database
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync().then(() => {
   console.log("User table created!");
 });
 

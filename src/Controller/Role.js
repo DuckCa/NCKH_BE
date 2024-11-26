@@ -38,8 +38,8 @@ const putRole = async (req, res) => {
 
 const postRole = async (req, res) => {
   try {
-    const { roleName, roleDecription } = req.body;
-    const data = await addRoleService(roleName, roleDecription);
+    const { roleName, roleDescription } = req.body;
+    const data = await addRoleService(roleName, roleDescription);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

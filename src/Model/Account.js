@@ -41,21 +41,17 @@ const Account = sequelize.define(
     bio: {
       type: DataTypes.STRING,
     },
-    userItem: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
   },
   {
-    tableName: "Accounts",
+    tableName: "Account",
     paranoid: true,
     timestamps: true, // Bật timestamps
   }
 );
 
 // Synchronize the model with the database
-sequelize.sync({ force: false }).then(() => {
+//{ force: true }
+sequelize.sync().then(() => {
   console.log("User table created!");
 });
 

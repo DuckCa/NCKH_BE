@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const {
-    getRequests,
-    putRequest,
-    postRequest,
-    deleteRequest,
+  getRequests,
+  getRequestsType,
+  putRequest,
+  postRequest,
+  deleteRequest,
 } = require("../Controller/Request");
-router.get("/item", getRequests);
-router.put("/item", putRequest); // cập nhập data
-router.post("/item", postRequest); //thêm data
-router.delete("/item", deleteRequest);
+router.get("/request", getRequests);
+router.get("/request", getRequestsType);
+router.put("/request", putRequest); // cập nhập data
+router.post("/request", postRequest); //thêm data
+router.delete("/request", deleteRequest);
 module.exports = router;

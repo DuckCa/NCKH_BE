@@ -2,37 +2,43 @@ const { DataTypes } = require("sequelize");
 // Import the Sequelize Oracle connection instance
 const sequelize = require("../config/databaseOrac");
 
-const RequestHistory = sequelize.define(
-  "RequestHistory",
+const Bill = sequelize.define(
+  "Bill",
   {
-    _UserId: {
+    _id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
-    },
-    _RequestId: {
-      type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
+      autoIncrement: true,
     },
-    _dayRequest: {
-      type: DataTypes.DATE,
+    cartId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    paymentMethod: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+    },
+    totalAmount: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
     },
   },
   {
-    tableName: "Request_History",
+    tableName: "Bill",
     paranoid: true,
     timestamps: true, // Bật timestamps
   }
 );
 
+// Synchronize the model with the database
 sequelize.sync().then(() => {
   console.log("User table created!");
 });
 
-module.exports = RequestHistory;
+module.exports = Bill;

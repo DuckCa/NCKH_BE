@@ -1,5 +1,11 @@
-const Account = require("../Model/Account");
-const matchRole = require("../Model/MatchRole");
+const {
+  sequelize,
+  Account,
+  Role,
+  MatchRole,
+  UserItem,
+  RequestHistory,
+} = require("../Model/Index");
 const Cart = require("../Model/Cart");
 const { default: mongoose } = require("mongoose");
 const getAccountList = async (req) => {
@@ -36,8 +42,8 @@ const addAccountService = async (
   email,
   password,
   bio,
-  userItem,
-  roleId
+  roleId,
+  userItem
 ) => {
   const cart = await Cart.create({});
   const existingCart = await Cart.findById(cart._id);
@@ -50,15 +56,27 @@ const addAccountService = async (
     console.log("CART CREATED SUCCESS!!!!!");
     console.log(">>>>>CHECK CART:", existingCart);
   }
+  console.log(
+    `>>>>>>CHECK Before ACCOUNT: USERNAME: ${username}, EMAIL: ${email}, PASSWORD: ${password}, CARTID: ${cart}, BIO: ${bio} `
+  );
   const data = await Account.create({
-    username,
-    email,
-    password,
+    username: username,
+    email: email,
+    password: password,
     cart: JSON.stringify(cart._id),
-    bio,
-    userItem,
+    bio: bio,
   });
-  const matchrole = await matchRole.create({
+
+  const inputstring = userItem === "true";
+  const accountItem = await UserItem.create({
+    type: inputstring,
+    userId: data._id,
+  });
+
+  console.log(
+    `>>>>>>CHECK BEFORE MATCHTROLE, ACCOUNTID: ${data._id}, ROLEID: ${roleId}`
+  );
+  const matchrole = await MatchRole.create({
     accountId: data._id,
     roleId: roleId,
   });
@@ -71,7 +89,7 @@ const addAccountService = async (
 const deleteAccountService = async (_id) => {
   const account = await Account.findById(_id);
   const data = await Account.delete({ _id: _id });
-  const delMatchRole = await matchRole.delete({ accountId: _id });
+  const delMatchRole = await MatchRole.delete({ accountId: _id });
   const delCart = await Cart.delete({ _id: account.cart });
   console.log(`>>>>>>>>CHECK cartId: ${account.cart}; CHECK ID ${_id}`);
   return data;

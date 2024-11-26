@@ -46,6 +46,7 @@ const putAccount = async (req, res) => {
 const postAccount = async (req, res) => {
   try {
     const { username, email, password, bio, roleId, userItem } = req.body;
+
     const data = await addAccountService(
       username,
       email,
