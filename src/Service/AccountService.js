@@ -14,27 +14,44 @@ const getAccountList = async (req) => {
 };
 
 const updateAccountService = async (infor) => {
-  if (infor.wishlist) {
-    const data = await Account.updateOne(
-      { _id: infor._id },
-      { wishlist: infor.wishlist }
+  const findUserById = await MatchRole.findOne({
+    where: { accountId: infor._id },
+  });
+  console.log(
+    ">>>>>>>CHECK TYPE:",
+    typeof findUserById.roleId,
+    "AND: ",
+    typeof Number(infor.roleId)
+  );
+  console.log(
+    ">>>>>>>CHECK VALUE:",
+    findUserById.roleId,
+    "AND: ",
+    Number(infor.roleId)
+  );
+  if (Number(infor.roleId) !== findUserById.roleId) {
+    const updateRoleUser = await MatchRole.update(
+      { roleId: infor.roleId },
+      { where: { accountId: infor._id } }
     );
-    return data;
+    if (updateRoleUser) {
+      console.log(">>>>>CHANGE ROLE SUCCESS!!!!!!");
+    }
   } else {
-    const data = await Account.updateOne(
-      { _id: infor._id },
-      {
-        userName: infor.userName,
-        email: infor.email,
-        password: infor.password,
-        bio: infor.bio,
-        portfolio: infor.portfolio
-          ? mongoose.Types.ObjectId(infor.portfolio)
-          : null,
-      }
-    );
-    return data;
+    console.log(">>>>>Role NOT CHANGE!!!!!!");
   }
+  const data = await Account.update(
+    {
+      username: infor.username,
+      email: infor.email,
+      password: infor.password,
+      bio: infor.bio,
+    },
+    {
+      where: { _id: infor._id },
+    }
+  );
+  return data;
 };
 //Function dành cho admin để tạo các account đặc biệt
 const addAccountService = async (

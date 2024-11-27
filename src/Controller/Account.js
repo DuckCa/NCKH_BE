@@ -17,26 +17,17 @@ const getAccounts = async (req, res) => {
 
 const putAccount = async (req, res) => {
   try {
-    const { userName, email, password, bio, roleId, userItem } = req.body;
+    const { _id, username, email, password, bio, roleId } = req.body;
 
-    console.log(
-      `>>>>>>>>>>>>CHECK: ${_id},${userName} , ${email},${password} ,${wishlist} ,${bio} ,${portfolio} }`
-    );
-    //Hai loai update, update wishlist va update phan con lai
-    if (wishlist) {
-      const data = await updateAccountService({ _id, wishlist });
-      return res.status(200).json(data);
-    } else {
-      const data = await updateAccountService({
-        _id,
-        username,
-        email,
-        password,
-        bio,
-        portfolio,
-      });
-      return res.status(200).json(data);
-    }
+    const data = await updateAccountService({
+      _id,
+      username,
+      email,
+      password,
+      bio,
+      roleId,
+    });
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error updating Account" });
