@@ -8,10 +8,14 @@ const RequestType = require("./RequestType");
 Account.belongsToMany(Role, {
   through: MatchRole,
   foreignKey: "accountId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
 });
 Role.belongsToMany(Account, {
   through: MatchRole,
   foreignKey: "roleId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
 });
 Account.belongsToMany(RequestType, {
   through: RequestHistory,

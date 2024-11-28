@@ -7,7 +7,7 @@ const {
   RequestHistory,
 } = require("../Model/Index");
 const Cart = require("../Model/Cart");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const getAccountList = async (req) => {
   const data = await Account.findAll();
   return data;
@@ -98,17 +98,20 @@ const addAccountService = async (
     roleId: roleId,
   });
 
-  return `${JSON.stringify(data)}\n${JSON.stringify(
-    matchrole
-  )}\n${JSON.stringify(cart)}`;
+  return data;
 };
 
 const deleteAccountService = async (_id) => {
-  const account = await Account.findById(_id);
-  const data = await Account.delete({ _id: _id });
-  const delMatchRole = await MatchRole.delete({ accountId: _id });
-  const delCart = await Cart.delete({ _id: account.cart });
-  console.log(`>>>>>>>>CHECK cartId: ${account.cart}; CHECK ID ${_id}`);
+  const account = await Account.findOne({
+    where: { _id: _id },
+  });
+  const data = await Account.destroy({ where: { _id: _id } });
+  const delMatchRole = await MatchRole.destroy({ where: { accountId: _id } });
+  console.log(">>>>>>>CHECK CART:", account.cart);
+  const delCart = await Cart.delete({
+    _id: account.cart.replace(/"/g, ""),
+  });
+
   return data;
 };
 module.exports = {
