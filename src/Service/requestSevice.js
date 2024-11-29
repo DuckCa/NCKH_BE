@@ -20,12 +20,26 @@ module.exports = {
     const data = await RequestHistory.create();
     return data;
   },
-  updateRequestTypeService: async () => {
+  addRequestTypeService: async () => {
+    const data = await RequestType.create();
+    return data;
+  },
+  updateRequestService: async () => {
     const data = await RequestHistory.findAll();
     return data;
   },
+  updateRequestTypeService: async () => {
+    const data = await RequestType.findAll();
+    return data;
+  },
+
   deleteRequestService: async () => {
     const data = await RequestHistory.findAll();
+    return data;
+  },
+
+  deleteRequestTypeService: async () => {
+    const data = await RequestType.findAll();
     return data;
   },
 };

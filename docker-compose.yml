@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070" # Map cổng
+    environment:
+      NODE_ENV: production
+      PORT: 8070
+      MONGO_DB_URL: mongodb+srv://graphicwebsite.mify6.mongodb.net/?retryWrites=true&w=majority&appName=GraphicWebsite
+      JWT_SECRET: your-secret-key
+      JWT_EXPIRE: 1d
+      Oracle_DB_HOST: localhost
+      Oracle_DB_PORT: 1522
+      Oracle_DB_SID: orcl
+      Oracle_DB_USER: Graphic
+      Oracle_DB_PASSWORD: duc140603
+    volumes:
+      - .:/app
+      - /app/node_modules

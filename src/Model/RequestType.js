@@ -14,7 +14,11 @@ const RequestType = sequelize.define(
     Name: {
       type: DataTypes.STRING,
       allowNull: true,
+      unique: true
     },
+    Description: {
+      type: DataTypes.STRING, 
+    }
   },
   {
     tableName: "RequestType",
