@@ -1,4 +1,7 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env",
+});
+
 const { Sequelize } = require("sequelize");
 
 // Khởi tạo Sequelize với cấu hình đúng
@@ -7,7 +10,7 @@ const sequelize = new Sequelize(
   process.env.DB_USER_Oracle,
   process.env.DB_PASSWORD_Oracle,
   {
-    host: process.env.HOST_NAME,
+    host: process.env.DB_HOST,
     port: process.env.DB_Oracle_PORT,
     dialect: "oracle",
   }

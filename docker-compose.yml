@@ -3,19 +3,41 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: backend
     ports:
-      - "8070:8070" # Map cổng
-    environment:
-      NODE_ENV: production
-      PORT: 8070
-      MONGO_DB_URL: mongodb+srv://graphicwebsite.mify6.mongodb.net/?retryWrites=true&w=majority&appName=GraphicWebsite
-      JWT_SECRET: your-secret-key
-      JWT_EXPIRE: 1d
-      Oracle_DB_HOST: localhost
-      Oracle_DB_PORT: 1522
-      Oracle_DB_SID: orcl
-      Oracle_DB_USER: Graphic
-      Oracle_DB_PASSWORD: duc140603
+      - "8050:8050"
+    env_file:
+      - .env.prod
+    depends_on:
+      - oracle
+    links:
+      - oracle
     volumes:
       - .:/app
-      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050/health"] # Đảm bảo endpoint này tồn tại
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  oracle:
+    image: gvenzl/oracle-free:latest
+    container_name: oracle-db
+    environment:
+      ORACLE_PASSWORD: "duc140603"
+      APP_USER: "graphicproduction"
+      APP_USER_PASSWORD: "duc140603"
+    ports:
+      - "1523:1523"
+    volumes:
+      # - ./listener.ora:/opt/oracle/product/23ai/dbhomeFree/network/admin/listener.ora
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "tnsping", "oracle:1523"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  oracle-data:

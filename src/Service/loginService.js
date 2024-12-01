@@ -6,7 +6,7 @@ const {
   UserItem,
   RequestHistory,
 } = require("../Model/Index");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 const registerAccount = async (userName, email, password, role) => {
   const data = Account.create({ userName, email, password, role });

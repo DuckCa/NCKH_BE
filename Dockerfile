@@ -1,27 +1,19 @@
-# Sử dụng base image Node.js
-FROM node:16
 
-# Cài đặt công cụ cần thiết cho native modules
-RUN apt-get update && apt-get install -y python3 make g++
+# Sử dụng Node.js LTS làm base image
+FROM node:20
 
-# Đặt thư mục làm việc
-WORKDIR /app
+# Thiết lập thư mục làm việc
+WORKDIR /src/server
 
-# Sao chép các tệp package
+# Sao chép package.json và package-lock.json
 COPY package*.json ./
-
-# Cài đặt dependencies (chỉ production nếu NODE_ENV=production)
-RUN npm install
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Sao chép toàn bộ mã nguồn vào container
 COPY . .
 
-# Thiết lập biến môi trường (nếu cần thiết)
-ENV NODE_ENV=production
-
-# Expose cổng ứng dụng
+# Thiết lập cổng mặc định
 EXPOSE 8070
 
-
-# Start application
+# Chạy ứng dụng
 CMD ["node", "src/server.js"]

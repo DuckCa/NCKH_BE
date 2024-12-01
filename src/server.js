@@ -1,4 +1,7 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env",
+});
+
 const { createServer } = require("node:http");
 const hostname = process.env.HOST_NAME;
 const port = process.env.PORT || 8888;
