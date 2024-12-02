@@ -13,6 +13,10 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_Oracle_PORT,
     dialect: "oracle",
+    logging: console.log, // Log mọi truy vấn
+    dialectOptions: {
+      connectString: `${process.env.DB_HOST}:${process.env.DB_Oracle_PORT}/${process.env.DB_Oracle_SID}`, // Xác định rõ chuỗi kết nối
+    },
   }
 );
 
