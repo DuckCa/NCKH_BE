@@ -24,10 +24,10 @@ services:
   oracle:
     image: gvenzl/oracle-free:latest
     container_name: oracle-db
-    environment:
-      ORACLE_PASSWORD: "duc140603"
-      APP_USER: "graphicproduction"
-      APP_USER_PASSWORD: "duc140603"
+    # environment:
+    #   ORACLE_PASSWORD: "duc140603"
+    #   APP_USER: "graphicproduction"
+    #   APP_USER_PASSWORD: "duc140603"
     ports:
       - "1521:1523"
     # ports:
