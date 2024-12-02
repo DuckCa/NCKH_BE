@@ -13,7 +13,7 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY . .
 
 # Thiết lập cổng mặc định
-EXPOSE 8070
+EXPOSE 8050
 
 # Chạy ứng dụng
 CMD ["node", "src/server.js"]
