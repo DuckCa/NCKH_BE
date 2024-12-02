@@ -18,7 +18,7 @@ const sequelize = new Sequelize(
 
 console.log(">>>>>>>>>CHECK PASSWORD:", process.env.DB_PASSWORD_Oracle);
 console.log(">>>>>>>>>CHECK Node_Mode:", process.env.NODE_ENV);
-
+console.log(">>>>>>>>>CHECK Connect:", sequelize);
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
