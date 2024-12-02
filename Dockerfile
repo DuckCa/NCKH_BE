@@ -24,7 +24,5 @@ EXPOSE 8050
 # Chạy ứng dụng
 CMD ["node", "src/server.js"]
 
-#chạy  deploy.sh
-COPY deploy.sh /usr/local/bin/deploy.sh
-RUN chmod +x /usr/local/bin/deploy.sh
-ENTRYPOINT ["/usr/local/bin/deploy.sh"]
+
+
