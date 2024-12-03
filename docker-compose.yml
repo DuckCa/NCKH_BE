@@ -19,11 +19,14 @@ services:
       retries: 3
 
   oracle:
-    network_mode: host
     image: gvenzl/oracle-free:latest
+    network_mode: host
     container_name: oracle-db
+    ports:
+      - "1521:1521"
     volumes:
       - oracle-data:/opt/oracle/oradata
+      - ./tnsnames.ora:/opt/oracle/homes/OraDBFree/network/admin/tnsnames.ora
     healthcheck:
       test: ["CMD", "tnsping", "127.0.0.1:1521"]
       interval: 30s
