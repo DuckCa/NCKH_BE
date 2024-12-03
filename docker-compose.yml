@@ -3,25 +3,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    network_mode: host
     container_name: backend
     ports:
       - "8050:8050"
     env_file:
       - .env.prod
-    depends_on:
-      - oracle
-    links:
-      - oracle
     volumes:
       - .:/app
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8050/health"] # Đảm bảo endpoint này tồn tại
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8050/health"] # Đảm bảo endpoint này tồn tại
       interval: 30s
       timeout: 10s
       retries: 3
 
   oracle:
+    network_mode: host
     image: gvenzl/oracle-free:latest
     container_name: oracle-db
     # environment:
@@ -36,7 +34,7 @@ services:
       # - ./listener.ora:/opt/oracle/product/23ai/dbhomeFree/network/admin/listener.ora
       - oracle-data:/opt/oracle/oradata
     healthcheck:
-      test: ["CMD", "tnsping", "oracle:1521"]
+      test: ["CMD", "tnsping", "127.0.0.1:1521"]
       # test: ["CMD", "tnsping", "oracle:1523"]
       interval: 30s
       timeout: 10s
