@@ -22,20 +22,10 @@ services:
     network_mode: host
     image: gvenzl/oracle-free:latest
     container_name: oracle-db
-    # environment:
-    #   ORACLE_PASSWORD: "duc140603"
-    #   APP_USER: "graphicproduction"
-    #   APP_USER_PASSWORD: "duc140603"
-    ports:
-      - "1521:1523"
-    # ports:
-    #   - "1523:1523"
     volumes:
-      # - ./listener.ora:/opt/oracle/product/23ai/dbhomeFree/network/admin/listener.ora
       - oracle-data:/opt/oracle/oradata
     healthcheck:
       test: ["CMD", "tnsping", "127.0.0.1:1521"]
-      # test: ["CMD", "tnsping", "oracle:1523"]
       interval: 30s
       timeout: 10s
       retries: 5
