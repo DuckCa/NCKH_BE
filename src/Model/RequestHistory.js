@@ -15,13 +15,12 @@ const RequestHistory = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
-    _dayRequest: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     status: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    Message: {
+      type: DataTypes.STRING,
     },
   },
   {

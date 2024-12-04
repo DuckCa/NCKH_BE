@@ -9,16 +9,16 @@ const RequestType = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
+      autoIncrement: true,
     },
-
     Name: {
       type: DataTypes.STRING,
       allowNull: true,
-      unique: true
+      unique: true,
     },
     Description: {
-      type: DataTypes.STRING, 
-    }
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "RequestType",

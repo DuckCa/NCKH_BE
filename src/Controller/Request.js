@@ -3,7 +3,6 @@ const {
   getRequestType,
   addRequestService,
   addRequestTypeService,
-  updateRequestService,
   updateRequestTypeService,
   deleteRequestService,
   deleteRequestTypeService,
@@ -28,56 +27,62 @@ const getRequestsType = async (req, res) => {
 };
 const postRequest = async (req, res) => {
   try {
-    const data = await addRequestService();
+    const { _UserId, _RequestId, status, Message } = req.body;
+    const data = await addRequestService({
+      _UserId,
+      _RequestId,
+      status,
+      Message,
+    });
     return res.status(200).json(data);
   } catch {
-    return res.status(500).json({ message: "Error post Request List" });
+    return res.status(500).json({ message: "Error post Request" });
   }
 };
 const postRequestType = async (req, res) => {
   try {
-    const data = await addRequestTypeService();
+    const { Name, Description } = req.body;
+
+    const data = await addRequestTypeService({ Name, Description });
     return res.status(200).json(data);
   } catch {
-    return res.status(500).json({ message: "Error post Request Type List" });
-  }
-};
-const putRequest = async (req, res) => {
-  try {
-    const data = await updateRequestService();
-    return res.status(200).json(data);
-  } catch {
-    return res.status(500).json({ message: "Error put Request List" });
+    return res.status(500).json({ message: "Error post Request Type" });
   }
 };
 const putRequestType = async (req, res) => {
   try {
-    const data = await updateRequestTypeService();
+    const { _RequestId, Name, Description } = req.body;
+    const data = await updateRequestTypeService({
+      _RequestId,
+      Name,
+      Description,
+    });
     return res.status(200).json(data);
   } catch {
-    return res.status(500).json({ message: "Error put Request Type List" });
+    return res.status(500).json({ message: "Error put Request Type" });
   }
 };
 const deleteRequest = async (req, res) => {
   try {
-    const data = await deleteRequestService();
+    const { _UserId, _RequestId } = req.body;
+    const data = await deleteRequestService({ _UserId, _RequestId });
     return res.status(200).json(data);
   } catch {
-    return res.status(500).json({ message: "Error delete Request List" });
+    return res.status(500).json({ message: "Error delete Request" });
   }
 };
 const deleteRequestType = async (req, res) => {
   try {
-    const data = await deleteRequestTypeService();
+    const { _RequestId } = req.body;
+    const data = await deleteRequestTypeService(_RequestId);
     return res.status(200).json(data);
   } catch {
-    return res.status(500).json({ message: "Error delete Request Type List" });
+    return res.status(500).json({ message: "Error delete Request Type" });
   }
 };
 module.exports = {
   getRequests,
   getRequestsType,
-  putRequest,
   putRequestType,
   postRequest,
   postRequestType,

@@ -3,7 +3,6 @@ const router = express.Router();
 const {
   getRequests,
   getRequestsType,
-  putRequest,
   putRequestType,
   postRequest,
   postRequestType,
@@ -11,7 +10,6 @@ const {
   deleteRequestType,
 } = require("../Controller/Request");
 router.get("/request", getRequests);
-router.put("/request", putRequest); // cập nhập data
 router.post("/request", postRequest); //thêm data
 router.delete("/request", deleteRequest);
 router.get("/reqtype", getRequestsType);
