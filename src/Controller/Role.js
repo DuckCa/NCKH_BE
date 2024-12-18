@@ -49,8 +49,8 @@ const postRole = async (req, res) => {
 
 const deleteRole = async (req, res) => {
   try {
-    const { roleName } = req.body;
-    const data = await deleteRoleService(roleName);
+    const { _id } = req.body;
+    const data = await deleteRoleService(_id);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

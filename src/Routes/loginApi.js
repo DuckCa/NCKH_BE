@@ -6,8 +6,8 @@ const {
   registerApi,
   forgetPassword,
 } = require("../Controller/Login");
-router.get("/login", getInfor);
-router.get("/login", loginApi);
+
+router.post("/", loginApi);
 router.put("/register", registerApi);
 router.get("/forgetpassword", forgetPassword);
 module.exports = router;

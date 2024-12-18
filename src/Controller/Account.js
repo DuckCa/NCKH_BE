@@ -1,5 +1,6 @@
 const {
   getAccountList,
+  getAccountByIdService,
   addAccountService,
   updateAccountService,
   deleteAccountService,
@@ -14,7 +15,15 @@ const getAccounts = async (req, res) => {
     return res.status(500).json({ message: "Error retrieving Accounts" });
   }
 };
-
+const getAccountById = async (req, res) => {
+  try {
+    const data = await getAccountByIdService(req.param);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error retrieving Accounts" });
+  }
+};
 const putAccount = async (req, res) => {
   try {
     const { _id, username, email, password, bio, roleId } = req.body;
@@ -64,4 +73,10 @@ const deleteAccount = async (req, res) => {
   }
 };
 
-module.exports = { getAccounts, putAccount, postAccount, deleteAccount };
+module.exports = {
+  getAccounts,
+  getAccountById,
+  putAccount,
+  postAccount,
+  deleteAccount,
+};

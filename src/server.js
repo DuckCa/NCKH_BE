@@ -7,6 +7,8 @@ const hostname = process.env.HOST_NAME;
 const port = process.env.PORT || 8888;
 const express = require("express");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
+
 const app = express();
 const loginRoutes = require("./Routes/loginApi");
 const roleRoutes = require("./Routes/roleApi");
@@ -14,7 +16,10 @@ const accRoutes = require("./Routes/accApi");
 const itemRoutes = require("./Routes/itemApi");
 const sequelize = require("./config/databaseOrac");
 const requestRouters = require("./Routes/requestApi");
+const { defaultDataService } = require("./Service/defaultData");
+// const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
+app.use(cors());
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,6 +43,9 @@ app.use("/user", accRoutes);
     //Connect for mongonoose
     await sequelize.authenticate();
     await conn();
+    console.log(typeof defaultDataService);
+    await defaultDataService();
+
     app.listen(port, hostname, () => {
       console.log(`Server running at http://${hostname}:${port}/`);
     });

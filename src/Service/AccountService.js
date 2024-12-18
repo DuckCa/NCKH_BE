@@ -12,7 +12,10 @@ const getAccountList = async (req) => {
   const data = await Account.findAll();
   return data;
 };
-
+const getAccountByIdService = async (id) => {
+  const data = await Account.findById(id);
+  return data;
+};
 const updateAccountService = async (infor) => {
   const findUserById = await MatchRole.findOne({
     where: { accountId: infor._id },

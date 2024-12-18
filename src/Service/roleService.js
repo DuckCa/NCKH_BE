@@ -29,8 +29,8 @@ const updateRoleService = async (roleName, roleDescription, newName) => {
   return data;
 };
 
-const deleteRoleService = async (roleName) => {
-  const data = await Role.delete({ roleName: roleName });
+const deleteRoleService = async (_id) => {
+  const data = await Role.destroy({ where: { _id: _id } });
   return data;
 };
 
