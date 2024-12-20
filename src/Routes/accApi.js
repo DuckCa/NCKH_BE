@@ -7,6 +7,9 @@ const {
   postAccount,
   deleteAccount,
 } = require("../Controller/Account");
+const delay = require("../Middleware/delay.js");
+router.all("*", delay); //"*" có nghĩa là tất cả router con sẽ phải thông qua đoạn code này và chạy vào delay trước
+
 router.get("/Acc", getAccounts);
 router.get("/Acc/:id", getAccountById);
 router.put("/Acc", putAccount); // cập nhập data

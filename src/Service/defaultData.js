@@ -9,6 +9,8 @@ const {
 const Cart = require("../Model/Cart");
 const mongoose = require("mongoose");
 const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
+const saltRounds = 10;
 const { getMatchRoleList } = require("./roleService");
 const getAccountList = async (req) => {
   const data = await Account.findAll();
@@ -33,24 +35,25 @@ const defaultDataService = async () => {
         "A person can watch, search art and buy it, normal user can make a request to become an artist.",
     },
   ];
+  const passwordDecoded = await bcrypt.hash("123", saltRounds);
   let dataAccount1 = {
     username: "Nguyen Hai Hoai Duc",
     email: "fizzducnguyen@gmail.com",
-    password: "123",
+    password: passwordDecoded,
     cart: null,
     bio: "A handsome admin",
   };
   let dataAccount2 = {
     username: "Tran Trung Nghia",
     email: "trungnghia@gmail.com",
-    password: "123",
+    password: passwordDecoded,
     cart: null,
     bio: "A good artist",
   };
   let dataAccount3 = {
     username: "Nguyen Viet Hoa",
     email: "viethoa@gmail.com",
-    password: "123",
+    password: passwordDecoded,
     cart: null,
     bio: "A normal user",
   };

@@ -23,7 +23,7 @@ services:
     network_mode: host
     container_name: oracle-db
     ports:
-      - "1521:1521"
+      - "1522:1521"
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./tnsnames.ora:/opt/oracle/homes/OraDBFree/network/admin/tnsnames.ora
