@@ -20,13 +20,17 @@ services:
 
   oracle:
     image: gvenzl/oracle-free:latest
-    network_mode: host
     container_name: oracle-db
+    networks:
+      custom_network:
+        ipv4_address: 192.168.1.100  # Đặt địa chỉ IP tĩnh cho container
     ports:
       - "1521:1521"
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./tnsnames.ora:/opt/oracle/homes/OraDBFree/network/admin/tnsnames.ora
+    environment:
+      ORACLE_PASSWORD: "123456" # Đặt mật khẩu bạn muốn
     healthcheck:
       test: ["CMD", "tnsping", "127.0.0.1:1521"]
       interval: 30s
@@ -35,3 +39,12 @@ services:
 
 volumes:
   oracle-data:
+
+networks:
+  custom_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24  # Đặt dải mạng
+
+
