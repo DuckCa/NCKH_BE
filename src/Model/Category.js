@@ -12,6 +12,10 @@ const categorySchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    TotalItem: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

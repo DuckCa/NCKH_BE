@@ -6,12 +6,7 @@ const getInfor = async (req, res) => {
 };
 const loginApi = async (req, res) => {
   const { email, password } = req.body;
-  console.log(
-    ">>>>>>>>>>>>>>>CHECK DATA FROM FE 1.email:",
-    email,
-    " 2.password:",
-    password
-  );
+  console.log(">>>>>>>>>>>>>>CHECK LOGINNNNNNNNNN");
   const data = await loginService(email, password);
   return res.status(200).json(data);
 };

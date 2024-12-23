@@ -10,10 +10,15 @@ const Cart = require("../Model/Cart");
 const mongoose = require("mongoose");
 const getAccountList = async (req) => {
   const data = await Account.findAll();
-  return data;
+  const sanitizedData = data.map((item) => {
+    const { password, cart, ...rest } = item.dataValues;
+    return rest;
+  });
+  return sanitizedData;
 };
-const getAccountByIdService = async (id) => {
-  const data = await Account.findById(id);
+const getAccountByIdService = async (req) => {
+  const data = await Account.findOne({ where: { _id: req.query._id } });
+  console.log("CHECK DATA:", req.query._id);
   return data;
 };
 const updateAccountService = async (infor) => {
@@ -119,6 +124,7 @@ const deleteAccountService = async (_id) => {
 };
 module.exports = {
   getAccountList,
+  getAccountByIdService,
   addAccountService,
   updateAccountService,
   deleteAccountService,

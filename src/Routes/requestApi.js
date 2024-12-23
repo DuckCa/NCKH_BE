@@ -9,6 +9,14 @@ const {
   deleteRequest,
   deleteRequestType,
 } = require("../Controller/Request");
+const author = require("../Middleware/author.js");
+const authen = require("../Middleware/authen.js");
+router.all("*", authen);
+router.get("*", author("read", "Request"));
+router.post("*", author("create", "Request"));
+router.put("*", author("manage", "Request"));
+router.delete("*", author("delete", "Request"));
+
 router.get("/request", getRequests);
 router.post("/request", postRequest); //thêm data
 router.delete("/request", deleteRequest);

@@ -8,6 +8,7 @@ const {
   RequestHistory,
 } = require("../Model/Index");
 const Cart = require("../Model/Cart");
+const Category = require("../Model/Category");
 const { json } = require("express");
 const mongoose = require("mongoose");
 const getItemList = async (req) => {
@@ -22,13 +23,17 @@ const updateItemService = async (infor) => {
 
   if (Array.isArray(infor.artist)) {
     artistData = infor.artist
-      .filter((id) => id) // Loại bỏ các giá trị rỗng hoặc `null`
-      .map((id) => mongoose.Types.ObjectId(id)); // Chuyển đổi các giá trị hợp lệ thành `ObjectId`
-    categoryData = infor.artist
       .filter((id) => id)
       .map((id) => mongoose.Types.ObjectId(id));
   } else {
-    artistData = dataItem.artist; // Nếu không có artist mới, giữ nguyên dữ liệu cũ
+    artistData = dataItem.artist;
+  }
+
+  if (Array.isArray(infor.category)) {
+    categoryData = infor.category
+      .filter((id) => id)
+      .map((id) => mongoose.Types.ObjectId(id));
+  } else {
     categoryData = dataItem.category;
   }
 
@@ -38,6 +43,32 @@ const updateItemService = async (infor) => {
   let inforPrice = infor.price
     ? mongoose.Types.Decimal128.fromString(infor.price.toString())
     : dataItemPrice;
+
+  // Xác định các category được thêm hoặc xóa
+  const oldCategories = dataItem.category.map((id) => id.toString());
+  const newCategories = categoryData.map((id) => id.toString());
+
+  const removedCategories = oldCategories.filter(
+    (id) => !newCategories.includes(id)
+  );
+  const addedCategories = newCategories.filter(
+    (id) => !oldCategories.includes(id)
+  );
+
+  // Cập nhật TotalItem cho các category bị ảnh hưởng
+  await Promise.all(
+    removedCategories.map((id) =>
+      Category.updateOne({ _id: id }, { $inc: { TotalItem: -1 } })
+    )
+  );
+
+  await Promise.all(
+    addedCategories.map((id) =>
+      Category.updateOne({ _id: id }, { $inc: { TotalItem: 1 } })
+    )
+  );
+
+  // Cập nhật thông tin sản phẩm
   const data = await Item.updateOne(
     { _id: infor._id },
     {
@@ -60,11 +91,23 @@ const addItemService = async (infor) => {
     name: infor.name,
     description: infor.description,
     artist: JSON.parse(infor.artist),
-    category: infor.portfolio ? mongoose.Types.ObjectId(infor.portfolio) : null,
+    category: infor.category,
     price: infor.price,
     url: infor.url,
   });
-
+  if (infor?.category) {
+    infor.category.forEach(async (categories) => {
+      const findCategory = await Category.findById(categories);
+      const updateTotal = await Category.updateOne(
+        {
+          _id: findCategory._id,
+        },
+        {
+          TotalItem: findCategory.TotalItem + 1,
+        }
+      );
+    });
+  }
   return data;
 };
 
