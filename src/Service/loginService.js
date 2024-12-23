@@ -19,9 +19,9 @@ const loginService = async (email, password) => {
   const data = await Account.findOne({
     where: { email: email },
   });
-  console.log(">>>>>>>>CHECK PASSWORD:", data.password);
+  console.log(">>>>>>>>CHECK PASSWORD:", data?.password);
   if (data) {
-    const isMatchPassword = await bcrypt.compare(password, data.password);
+    const isMatchPassword = await bcrypt.compare(password, data?.password);
     if (isMatchPassword) {
       const userRole = await MatchRole.findAll({
         where: {
