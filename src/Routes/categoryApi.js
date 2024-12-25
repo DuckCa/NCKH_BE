@@ -10,14 +10,10 @@ const {
 const authen = require("../Middleware/authen.js");
 const author = require("../Middleware/author.js");
 router.all("*", authen); //"*" có nghĩa là tất cả router con sẽ phải thông qua đoạn code này và chạy vào delay trước
-router.get("*", author("read", "Category"));
-router.post("*", author("manage", "Category"));
-router.put("*", author("create", "Category"));
-router.delete("*", author("manage", "Category"));
 
-router.get("*", authen);
-router.get("/category", getCategory);
-router.put("/category", putCategory); // cập nhập data
-router.post("/category", postCategory); //thêm data
-router.delete("/category", deleteCategory);
+router.get("*", author("read", "Category"), authen);
+router.get("/category", author("read", "Category"), getCategory);
+router.put("/category", author("create", "Category"), putCategory); // cập nhập data
+router.post("/category", author("manage", "Category"), postCategory); //thêm data
+router.delete("/category", author("manage", "Category"), deleteCategory);
 module.exports = router;

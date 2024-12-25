@@ -12,16 +12,12 @@ const {
 const author = require("../Middleware/author.js");
 const authen = require("../Middleware/authen.js");
 router.all("*", authen);
-router.get("*", author("read", "Request"));
-router.post("*", author("create", "Request"));
-router.put("*", author("manage", "Request"));
-router.delete("*", author("delete", "Request"));
 
-router.get("/request", getRequests);
-router.post("/request", postRequest); //thêm data
+router.get("/request", author("read", "Request"), getRequests);
+router.post("/request", author("create", "Request"), postRequest); //thêm data
 router.delete("/request", deleteRequest);
-router.get("/reqtype", getRequestsType);
-router.post("/reqtype", postRequestType);
-router.put("/reqtype", putRequestType);
-router.delete("/reqtype", deleteRequestType);
+router.get("/reqtype", author("read", "Request"), getRequestsType);
+router.post("/reqtype", author("create", "Request"), postRequestType);
+router.put("/reqtype", author("manage", "Request"), putRequestType);
+router.delete("/reqtype", author("delete", "Request"), deleteRequestType);
 module.exports = router;

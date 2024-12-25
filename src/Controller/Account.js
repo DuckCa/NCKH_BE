@@ -10,8 +10,7 @@ const getAccounts = async (req, res) => {
   try {
     let data;
 
-    if (req.query._id) {
-      console.log("CHECKING req.query._id", typeof req.query._id);
+    if (req?.query?._id || req?.user?._id) {
       const id = req.query._id;
       data = await getAccountByIdService(req);
     } else {
@@ -22,7 +21,7 @@ const getAccounts = async (req, res) => {
       // Kiểm tra thêm data.length === 0 nếu cần
       return res.status(404).json({ message: "No accounts found" });
     }
-    return res.status(200).json(data);
+    return res.status(200).json({ role: req?.user?.userRole, data });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error retrieving Accounts" });
@@ -30,7 +29,6 @@ const getAccounts = async (req, res) => {
 };
 const getAccountById = async (req, res) => {
   try {
-    console.log("GET ACCOUNT BY ID!!");
     const data = await getAccountByIdService(req.query.id);
     return res.status(200).json(data);
   } catch (error) {

@@ -17,9 +17,13 @@ const getAccountList = async (req) => {
   return sanitizedData;
 };
 const getAccountByIdService = async (req) => {
-  const data = await Account.findOne({ where: { _id: req.query._id } });
-  console.log("CHECK DATA:", req.query._id);
-  return data;
+  const data = await Account.findOne({
+    where: { _id: req.query._id ?? req.user._id },
+  });
+
+  const { password, cart, ...rest } = data.dataValues;
+
+  return rest;
 };
 const updateAccountService = async (infor) => {
   const findUserById = await MatchRole.findOne({

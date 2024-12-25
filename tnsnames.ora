@@ -1,8 +1,17 @@
 FREE =
   (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1522))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1522))
     (CONNECT_DATA =
       (SERVER = DEDICATED)
       (SERVICE_NAME = FREE)
+    )
+  )
+
+FREEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1522))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREEPDB1)
     )
   )

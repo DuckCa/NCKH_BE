@@ -6,12 +6,11 @@ const getInfor = async (req, res) => {
 };
 const loginApi = async (req, res) => {
   const { email, password } = req.body;
-  console.log(">>>>>>>>>>>>>>CHECK LOGINNNNNNNNNN");
+
   const data = await loginService(email, password);
   return res.status(200).json(data);
 };
 const registerApi = async (req, res) => {
-  console.log(">>>>>>>>CHECK ACCOUNT:", req.body);
   const { userName, email, password, role } = req.body;
   const hashPassword = await bcrypt.hash(password, saltRounds);
   const data = await registerAccount(userName, email, hashPassword, role);
