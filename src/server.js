@@ -16,7 +16,7 @@ const accRoutes = require("./Routes/accApi");
 const itemRoutes = require("./Routes/itemApi");
 const sequelize = require("./config/databaseOrac");
 const requestRouters = require("./Routes/requestApi");
-const category = require("./Routes/categoryApi");
+const categoryRouters = require("./Routes/categoryApi");
 const { defaultDataService } = require("./Service/defaultData");
 // const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
@@ -25,9 +25,9 @@ app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/login", loginRoutes);
-app.use("/", itemRoutes, category, accRoutes);
+app.use("/", itemRoutes, categoryRouters, accRoutes);
 app.use("/user", itemRoutes, requestRouters, accRoutes);
-app.use("/user/sale", category, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
+app.use("/user/sale", categoryRouters, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
 app.use("/user/admin", roleRoutes, requestRouters, itemRoutes);
 
 // app.use("/");

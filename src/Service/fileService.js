@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 
 const uploadSingleFile = async (fileObject) => {
+  console.log(">>>CHECK FILE OBJECT:", fileObject);
   let extname = path.extname(fileObject.name);
   let basename = path.basename(fileObject.name, extname);
   let realname = JSON.stringify(basename + "-" + Date.now() + extname);

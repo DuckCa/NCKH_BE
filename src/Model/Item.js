@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongoose_delete = require("mongoose-delete");
+const { NUMBER } = require("sequelize");
 
 const itemSchema = mongoose.Schema(
   {
@@ -12,7 +13,7 @@ const itemSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    artist: [{ type: mongoose.Schema.Types.ObjectId, ref: "account" }],
+    artist: [{ type: Number }],
     category: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
     price: {
       type: mongoose.Schema.Types.Decimal128,

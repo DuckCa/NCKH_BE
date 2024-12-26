@@ -44,9 +44,10 @@ const putItem = async (req, res) => {
 
 const postItem = async (req, res) => {
   try {
-    const file = await uploadSingleFile(req.files.url);
+    console.log(">>>>>>>>>>>>>>>CHECK request file:", req.files);
+    const file = await uploadSingleFile(req?.files?.url);
     const { name, description, artist, category, price } = req.body;
-    console.log(">>>>>>>>>>>>>>>CHECK file",file )
+    console.log(">>>>>>>>>>>>>>>CHECK file", file);
     const url = file.path;
     console.log(
       ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
@@ -65,7 +66,7 @@ const postItem = async (req, res) => {
       price,
       url,
     });
-    
+
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);
