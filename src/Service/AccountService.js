@@ -16,6 +16,21 @@ const getAccountList = async (req) => {
   });
   return sanitizedData;
 };
+const getAccountByRoleService = async (_id) => {
+  const getRoleUser = await MatchRole.findAll({
+    where: { roleId: _id },
+  });
+
+  // Lấy danh sách accountId từ kết quả của MatchRole.findAll
+  const accountIds = getRoleUser.map((role) => role.dataValues.accountId);
+
+  // Dùng Promise.all để tìm tất cả các account bằng Account.findByPk
+  const accounts = await Promise.all(
+    accountIds.map((id) => Account.findByPk(id))
+  );
+
+  return accounts;
+};
 const getAccountByIdService = async (req) => {
   const data = await Account.findOne({
     where: { _id: req.query._id ?? req.user._id },
@@ -128,6 +143,7 @@ const deleteAccountService = async (_id) => {
 };
 module.exports = {
   getAccountList,
+  getAccountByRoleService,
   getAccountByIdService,
   addAccountService,
   updateAccountService,

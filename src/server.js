@@ -28,7 +28,7 @@ app.use("/login", loginRoutes);
 app.use("/", itemRoutes, categoryRouters, accRoutes);
 app.use("/user", itemRoutes, requestRouters, accRoutes);
 app.use("/user/sale", categoryRouters, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
-app.use("/user/admin", roleRoutes, requestRouters, itemRoutes);
+app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
 
 // app.use("/");
 // app.use("/login", loginRoutes);

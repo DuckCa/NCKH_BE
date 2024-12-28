@@ -1,11 +1,17 @@
 const {
   getAccountList,
+  getAccountByRoleService,
   getAccountByIdService,
   addAccountService,
   updateAccountService,
   deleteAccountService,
 } = require("../Service/AccountService");
 
+const getAccountByRole = async (req, res) => {
+  const roleId = req.query._id;
+  const data = await getAccountByRoleService(roleId);
+  return res.status(200).json(data);
+};
 const getAccounts = async (req, res) => {
   try {
     let data;
@@ -87,6 +93,7 @@ const deleteAccount = async (req, res) => {
 
 module.exports = {
   getAccounts,
+  getAccountByRole,
   getAccountById,
   putAccount,
   postAccount,

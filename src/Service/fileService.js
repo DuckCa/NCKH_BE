@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const uploadSingleFile = async (fileObject) => {
   console.log(">>>CHECK FILE OBJECT:", fileObject);
-  let extname = path.extname(fileObject.name);
-  let basename = path.basename(fileObject.name, extname);
+  let extname = path.extname(fileObject?.name);
+  let basename = path.basename(fileObject?.name, extname);
   let realname = JSON.stringify(basename + "-" + Date.now() + extname);
   console.log(">>>>>>Chech real name:", realname);
   let uploadPath = path.resolve(__dirname, "../Public/Items_e_commerce/");

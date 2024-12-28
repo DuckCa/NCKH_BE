@@ -87,16 +87,19 @@ const updateItemService = async (infor) => {
 
 const addItemService = async (infor) => {
   console.log(">>>>>>>>>>>>CHECKKKKKKK ITEM INFOR:", infor);
+
   const data = await Item.create({
     name: infor.name,
     description: infor.description,
     artist: JSON.parse(infor.artist),
-    category: infor.category,
+    category: JSON.parse(infor.category),
     price: infor.price,
     url: infor.url,
   });
-  if (infor?.category) {
-    infor.category.forEach(async (categories) => {
+  const listCate = JSON.parse(infor.category);
+  console.log(">>>CHECK Add item:", typeof listCate);
+  if (listCate) {
+    listCate?.forEach(async (categories) => {
       const findCategory = await Category.findById(categories);
       const updateTotal = await Category.updateOne(
         {
@@ -106,6 +109,7 @@ const addItemService = async (infor) => {
           TotalItem: findCategory.TotalItem + 1,
         }
       );
+      console.log("Category total has updated!!");
     });
   }
   return data;

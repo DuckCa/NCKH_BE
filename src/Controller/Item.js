@@ -8,6 +8,7 @@ const {
   uploadSingleFile,
   uploadMultipleFile,
 } = require("../Service/fileService");
+const mongoose = require("mongoose");
 const getItems = async (req, res) => {
   try {
     const data = await getItemList(req);
@@ -44,20 +45,26 @@ const putItem = async (req, res) => {
 
 const postItem = async (req, res) => {
   try {
-    console.log(">>>>>>>>>>>>>>>CHECK request file:", req.files);
+    console.log(">>>>>>>>>>>>>>>CHECK request file:", req);
     const file = await uploadSingleFile(req?.files?.url);
     const { name, description, artist, category, price } = req.body;
+    // const categoryArray = JSON.parse(category).map((cat) =>
+    //   mongoose.Types.ObjectId(cat)
+    // );
     console.log(">>>>>>>>>>>>>>>CHECK file", file);
     const url = file.path;
     console.log(
       ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
       name,
       description,
-      artist,
-      category,
+      typeof JSON.parse(artist),
+      typeof JSON.stringify(category),
       price,
       url
     );
+
+    // Xử lý `category` (danh sách ObjectId)
+
     const data = await addItemService({
       name,
       description,
