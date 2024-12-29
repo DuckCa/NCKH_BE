@@ -25,7 +25,7 @@ const getItemList = async (req) => {
               _id: _id,
             },
           });
-          return artist.username; // Trả về username của artist
+          return artist?.username; // Trả về username của artist
         })
       );
 

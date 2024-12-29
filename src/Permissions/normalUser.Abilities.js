@@ -9,6 +9,7 @@ function normalUserPermissions(can, cannot, user) {
   can("create", "Request", { _id: user?._id });
   can("delete", "Request", { _id: user?._id });
   can("update", "Account", { _id: user?._id });
+  can("manage", "Cart");
 }
 
 module.exports = normalUserPermissions;
