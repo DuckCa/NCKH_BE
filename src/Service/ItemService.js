@@ -13,7 +13,40 @@ const { json } = require("express");
 const mongoose = require("mongoose");
 const getItemList = async (req) => {
   const data = await Item.find();
-  return data;
+
+  // Sử dụng Promise.all để đợi tất cả các Promise hoàn thành
+  const dataOutput = await Promise.all(
+    data.map(async (item) => {
+      // Xử lý artist
+      const listArtist = await Promise.all(
+        item.artist.map(async (_id) => {
+          const artist = await Account.findOne({
+            where: {
+              _id: _id,
+            },
+          });
+          return artist.username; // Trả về username của artist
+        })
+      );
+
+      // Xử lý category
+      const listCategory = await Promise.all(
+        item.category.map(async (_id) => {
+          const category = await Category.findById(_id);
+          return category.Name; // Trả về Name của category
+        })
+      );
+
+      // Trả về đối tượng mới với artist và category đã được thay thế
+      return {
+        ...item.toObject(), // Chuyển Mongoose document thành plain object
+        artist: listArtist,
+        category: listCategory,
+      };
+    })
+  );
+
+  return dataOutput;
 };
 
 const updateItemService = async (infor) => {

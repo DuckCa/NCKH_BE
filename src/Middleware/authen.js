@@ -1,7 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const authen = (req, res, next) => {
-  const white_list = ["Acc", "Account", "category", "item"];
+  const white_list = ["Acc", "Account", "category", "item", "images"];
   console.log(">>>>>>>>CHECK URL:", req.originalUrl.split("?")[0]);
   if (white_list.find((item) => "/" + item === req.originalUrl.split("?")[0])) {
     next();

@@ -13,7 +13,6 @@ const { json } = require("express");
 const mongoose = require("mongoose");
 const getCategoryList = async (req) => {
   const data = await Category.find();
-  //Lấy cả số lượng tác phẩm của mỗi category
 
   return data;
 };

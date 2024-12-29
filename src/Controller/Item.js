@@ -52,7 +52,7 @@ const postItem = async (req, res) => {
     //   mongoose.Types.ObjectId(cat)
     // );
     console.log(">>>>>>>>>>>>>>>CHECK file", file);
-    const url = file.path;
+    const url = file.path.replace(/\\/g, `/`);
     console.log(
       ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
       name,
