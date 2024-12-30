@@ -5,6 +5,7 @@ const MatchRole = require("./MatchRole");
 const UserItem = require("./UserItem");
 const RequestHistory = require("./RequestHistory");
 const RequestType = require("./RequestType");
+const Bill = require("./Bill");
 Account.belongsToMany(Role, {
   through: MatchRole,
   foreignKey: "accountId",
@@ -40,4 +41,5 @@ module.exports = {
   UserItem,
   RequestHistory,
   RequestType,
+  Bill,
 };

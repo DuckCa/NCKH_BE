@@ -16,12 +16,23 @@ const getCartById = async (_id) => {
 };
 
 const updateCartService = async (infor) => {
-  const data = await Cart.updateOne(
-    { _id: infor._id },
-    { item: JSON.parse(infor.item) }
-  );
+  console.log(">>>CHECK Item from FE:", infor.item);
 
-  return data;
+  // Lấy giỏ hàng hiện tại
+  const cart = await Cart.findById(infor._id);
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  // Thêm item mới vào mảng item (nếu chưa tồn tại)
+  if (!cart.item.includes(infor.item)) {
+    cart.item.push(infor.item);
+  }
+
+  // Lưu giỏ hàng đã cập nhật
+  const updatedCart = await cart.save();
+
+  return updatedCart;
 };
 
 module.exports = { getCartById, updateCartService };

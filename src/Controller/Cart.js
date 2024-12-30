@@ -6,9 +6,10 @@ const {
 const mongoose = require("mongoose");
 const getCarts = async (req, res) => {
   try {
-    const _id = req.body._id;
+    const { _id } = req.query;
+    console.log(">>>>CHECK CART:", req.query);
     const data = await getCartById(_id);
-    console.log(">>>>CHECK Cart:", data);
+
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

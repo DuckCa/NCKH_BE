@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const getAccountList = async (req) => {
   const data = await Account.findAll();
   const sanitizedData = data.map((item) => {
-    const { password, cart, ...rest } = item.dataValues;
+    const { password, ...rest } = item.dataValues;
     return rest;
   });
   return sanitizedData;
@@ -36,7 +36,7 @@ const getAccountByIdService = async (req) => {
     where: { _id: req.query._id ?? req.user._id },
   });
 
-  const { password, cart, ...rest } = data.dataValues;
+  const { password, ...rest } = data.dataValues;
 
   return rest;
 };
@@ -107,7 +107,7 @@ const addAccountService = async (
     username: username,
     email: email,
     password: password,
-    cart: JSON.stringify(cart._id),
+    cart: cart._id.toString(),
     bio: bio,
   });
 
@@ -136,7 +136,8 @@ const deleteAccountService = async (_id) => {
   const delMatchRole = await MatchRole.destroy({ where: { accountId: _id } });
   console.log(">>>>>>>CHECK CART:", account.cart);
   const delCart = await Cart.delete({
-    _id: account.cart.replace(/"/g, ""),
+    _id: account.cart,
+    // _id: account.cart.replace(/"/g, "") code cũ
   });
 
   return data;

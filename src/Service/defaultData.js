@@ -87,17 +87,17 @@ const defaultDataService = async () => {
       switch (count) {
         case 0:
           roleId = getAdmintId._id;
-          dataAccount1.cart = JSON.stringify(carts._id);
+          dataAccount1.cart = carts._id.toString();
           datadefault = dataAccount1;
           break;
         case 1:
           roleId = getArtistId._id;
-          dataAccount2.cart = JSON.stringify(carts._id);
+          dataAccount2.cart = carts._id.toString();
           datadefault = dataAccount2;
           break;
         case 2:
           roleId = getNormalUserId._id;
-          dataAccount3.cart = JSON.stringify(carts._id);
+          dataAccount3.cart = carts._id.toString();
           datadefault = dataAccount3;
           break;
         default:

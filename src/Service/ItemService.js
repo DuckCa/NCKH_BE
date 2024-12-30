@@ -11,7 +11,7 @@ const Cart = require("../Model/Cart");
 const Category = require("../Model/Category");
 const { json } = require("express");
 const mongoose = require("mongoose");
-const getItemList = async (req) => {
+const getItemList = async () => {
   const data = await Item.find();
 
   // Sử dụng Promise.all để đợi tất cả các Promise hoàn thành
@@ -48,7 +48,45 @@ const getItemList = async (req) => {
 
   return dataOutput;
 };
+const getItemById = async (_id) => {
+  try {
+    // Tìm item bằng _id
+    const data = await Item.findById(_id);
+    if (!data) {
+      throw new Error("Item not found");
+    }
 
+    // Xử lý artist
+    const listArtist = await Promise.all(
+      data.artist.map(async (artistId) => {
+        const artist = await Account.findOne({
+          where: {
+            _id: artistId,
+          },
+        });
+        return artist ? artist.username : "Unknown Artist"; // Trả về username hoặc giá trị mặc định
+      })
+    );
+
+    // Xử lý category
+    const listCategory = await Promise.all(
+      data.category.map(async (categoryId) => {
+        const category = await Category.findById(categoryId);
+        return category ? category.Name : "Unknown Category"; // Trả về Name hoặc giá trị mặc định
+      })
+    );
+
+    // Trả về đối tượng mới với artist và category đã được thay thế
+    return {
+      ...data.toObject(), // Chuyển Mongoose document thành plain object
+      artist: listArtist,
+      category: listCategory,
+    };
+  } catch (error) {
+    console.error("Error in getItemById:", error);
+    throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+  }
+};
 const updateItemService = async (infor) => {
   const dataItem = await Item.findById(infor._id);
   let artistData;
@@ -158,6 +196,7 @@ const deleteItemService = async (_id) => {
 };
 module.exports = {
   getItemList,
+  getItemById,
   addItemService,
   updateItemService,
   deleteItemService,
