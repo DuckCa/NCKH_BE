@@ -166,7 +166,9 @@ const addItemService = async (infor) => {
     category: JSON.parse(infor.category),
     price: infor.price,
     url: infor.url,
+    originalUrl: infor.originalUrl,
   });
+
   const listCate = JSON.parse(infor.category);
   console.log(">>>CHECK Add item:", typeof listCate);
   if (listCate) {

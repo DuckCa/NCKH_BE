@@ -59,7 +59,8 @@ const postItem = async (req, res) => {
     //   mongoose.Types.ObjectId(cat)
     // );
     console.log(">>>>>>>>>>>>>>>CHECK file", file);
-    const url = file.path.replace(/\\/g, `/`);
+    const url = file.paths.watermarked.replace(/\\/g, `/`);
+    const originalUrl = file.paths.original.replace(/\\/g, `/`);
     console.log(
       ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
       name,
@@ -67,7 +68,8 @@ const postItem = async (req, res) => {
       typeof JSON.parse(artist),
       typeof JSON.stringify(category),
       price,
-      url
+      url,
+      originalUrl
     );
 
     // Xử lý `category` (danh sách ObjectId)
@@ -79,6 +81,7 @@ const postItem = async (req, res) => {
       category,
       price,
       url,
+      originalUrl,
     });
 
     return res.status(200).json(data);

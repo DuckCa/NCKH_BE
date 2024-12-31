@@ -20,6 +20,7 @@ const updateCartService = async (infor) => {
 
   // Lấy giỏ hàng hiện tại
   const cart = await Cart.findById(infor._id);
+  console.log(">>>>Check Cart:", cart);
   if (!cart) {
     throw new Error("Cart not found");
   }

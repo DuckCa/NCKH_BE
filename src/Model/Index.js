@@ -26,11 +26,12 @@ RequestType.belongsToMany(Account, {
   through: RequestHistory,
   foreignKey: "_RequestId",
 });
-Account.hasOne(UserItem, {
+Account.hasMany(UserItem, {
   foreignKey: "userId",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+
 //Tạo hooks để check xem loại request có RequestID đã bị xóa chưa, nếu bị xóa sẽ không hiển thị.
 
 module.exports = {

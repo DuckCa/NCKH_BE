@@ -36,6 +36,10 @@ const itemSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    originalUrl: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

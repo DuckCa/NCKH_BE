@@ -20,7 +20,7 @@ const getCarts = async (req, res) => {
 const putCart = async (req, res) => {
   try {
     const { _id, item } = req.body;
-
+    console.log(">>CHECK at controller. ID:", _id, "AND item:", item);
     const data = await updateCartService({
       _id,
       item,
