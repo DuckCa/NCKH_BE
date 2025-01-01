@@ -36,7 +36,7 @@ const itemSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    originalUrl: {
+    originlUrl: {
       type: String,
       required: true,
     },

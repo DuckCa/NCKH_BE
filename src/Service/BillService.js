@@ -72,13 +72,29 @@ const getBillByIdService = async (_id) => {
   }
 };
 const addBillService = async (infor) => {
-  const data = await Bill.create({
-    cartId: infor.cartId,
-    paymentMethod: infor.paymentMethod,
-    status: infor.status,
-    totalAmount: infor.totalAmount,
-  });
-  return data;
+  try {
+    const data = await Bill.create({
+      cartId: infor.cartId,
+      paymentMethod: infor.paymentMethod,
+      status: infor.status,
+      totalAmount: infor.totalAmount,
+    });
+
+    if (data?.dataValues?.cartId) {
+      const findCart = await Cart.findById(data?.dataValues?.cartId);
+      console.log(">>>CHECK Cart for Bill:", findCart);
+      findCart?.item?.forEach(async (item) => {
+        const accountItem = await UserItem.create({
+          type: 0,
+          userId: infor.userId,
+          item: item.toString(),
+        });
+      });
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 const updateBillService = async (infor) => {};
 

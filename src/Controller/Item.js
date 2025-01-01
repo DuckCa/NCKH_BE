@@ -55,12 +55,13 @@ const postItem = async (req, res) => {
     console.log(">>>>>>>>>>>>>>>CHECK request file:", req);
     const file = await uploadSingleFile(req?.files?.url);
     const { name, description, artist, category, price } = req.body;
+    const { _id } = req.user;
     // const categoryArray = JSON.parse(category).map((cat) =>
     //   mongoose.Types.ObjectId(cat)
     // );
     console.log(">>>>>>>>>>>>>>>CHECK file", file);
     const url = file.paths.watermarked.replace(/\\/g, `/`);
-    const originalUrl = file.paths.original.replace(/\\/g, `/`);
+    const originlUrl = file.paths.original.replace(/\\/g, `/`);
     console.log(
       ">>>>>>>>>>>>CHECKKK INFOR AT CONTROLLER:",
       name,
@@ -69,21 +70,22 @@ const postItem = async (req, res) => {
       typeof JSON.stringify(category),
       price,
       url,
-      originalUrl
+      originlUrl
     );
 
     // Xử lý `category` (danh sách ObjectId)
-
+    const userId = _id;
     const data = await addItemService({
+      userId,
       name,
       description,
       artist,
       category,
       price,
       url,
-      originalUrl,
+      originlUrl,
     });
-
+    console.log(">>>CHECK data return addItem:", data);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

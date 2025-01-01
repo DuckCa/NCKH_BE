@@ -42,6 +42,7 @@ const defaultDataService = async () => {
     password: passwordDecoded,
     cart: null,
     bio: "A handsome admin",
+    coin: 999999999,
   };
   let dataAccount2 = {
     username: "Tran Trung Nghia",
@@ -49,6 +50,7 @@ const defaultDataService = async () => {
     password: passwordDecoded,
     cart: null,
     bio: "A good artist",
+    coin: 999999999,
   };
   let dataAccount3 = {
     username: "Nguyen Viet Hoa",
@@ -56,6 +58,7 @@ const defaultDataService = async () => {
     password: passwordDecoded,
     cart: null,
     bio: "A normal user",
+    coin: 999999999,
   };
 
   const checkRole = await Role.findAll();
@@ -108,10 +111,6 @@ const defaultDataService = async () => {
 
       const data = await Account.create(datadefault);
 
-      const accountItem = await UserItem.create({
-        type: "false",
-        userId: data._id,
-      });
       console.log(">>>>>>>>>>>CHECK ROLE ID:", roleId);
       const matchrole = await MatchRole.create({
         accountId: data._id,

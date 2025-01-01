@@ -19,6 +19,7 @@ const requestRouters = require("./Routes/requestApi");
 const categoryRouters = require("./Routes/categoryApi");
 const cartRouters = require("./Routes/cartApi");
 const billRouters = require("./Routes/billApi");
+const userItem = require("./Routes/userItemApi");
 const { defaultDataService } = require("./Service/defaultData");
 // const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
@@ -42,7 +43,7 @@ app.use(
   requestRouters,
   accRoutes
 );
-app.use("/user/sale", categoryRouters, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
+app.use("/user/sale", userItem, categoryRouters, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
 app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
 
 // app.use("/");

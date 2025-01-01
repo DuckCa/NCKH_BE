@@ -19,11 +19,12 @@ const getCarts = async (req, res) => {
 
 const putCart = async (req, res) => {
   try {
-    const { _id, item } = req.body;
+    const { _id, item, type } = req.body;
     console.log(">>CHECK at controller. ID:", _id, "AND item:", item);
     const data = await updateCartService({
       _id,
       item,
+      type,
     });
     return res.status(200).json(data);
   } catch (error) {

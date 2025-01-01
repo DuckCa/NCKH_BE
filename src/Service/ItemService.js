@@ -157,35 +157,45 @@ const updateItemService = async (infor) => {
 };
 
 const addItemService = async (infor) => {
-  console.log(">>>>>>>>>>>>CHECKKKKKKK ITEM INFOR:", infor);
+  try {
+    console.log(">>>>>>>>>>>>CHECKKKKKKK ITEM INFOR:", infor);
 
-  const data = await Item.create({
-    name: infor.name,
-    description: infor.description,
-    artist: JSON.parse(infor.artist),
-    category: JSON.parse(infor.category),
-    price: infor.price,
-    url: infor.url,
-    originalUrl: infor.originalUrl,
-  });
-
-  const listCate = JSON.parse(infor.category);
-  console.log(">>>CHECK Add item:", typeof listCate);
-  if (listCate) {
-    listCate?.forEach(async (categories) => {
-      const findCategory = await Category.findById(categories);
-      const updateTotal = await Category.updateOne(
-        {
-          _id: findCategory._id,
-        },
-        {
-          TotalItem: findCategory.TotalItem + 1,
-        }
-      );
-      console.log("Category total has updated!!");
+    const data = await Item.create({
+      name: infor.name,
+      description: infor.description,
+      artist: JSON.parse(infor.artist),
+      category: JSON.parse(infor.category),
+      price: infor.price,
+      url: infor.url,
+      originlUrl: infor.originlUrl,
     });
+    console.log(">>>CHECK item create:", data._id);
+
+    const accountItem = await UserItem.create({
+      type: 1,
+      userId: infor.userId,
+      item: data._id.toString(),
+    });
+    const listCate = JSON.parse(infor.category);
+    console.log(">>>CHECK Add item:", typeof listCate);
+    if (listCate) {
+      listCate?.forEach(async (categories) => {
+        const findCategory = await Category.findById(categories);
+        const updateTotal = await Category.updateOne(
+          {
+            _id: findCategory._id,
+          },
+          {
+            TotalItem: findCategory.TotalItem + 1,
+          }
+        );
+        console.log("Category total has updated!!");
+      });
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
   }
-  return data;
 };
 
 const deleteItemService = async (_id) => {

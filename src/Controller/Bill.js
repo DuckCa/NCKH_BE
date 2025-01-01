@@ -36,7 +36,10 @@ const putBill = async (req, res) => {
 const postBill = async (req, res) => {
   try {
     const { cartId, paymentMethod, status, totalAmount } = req.body;
+    const { _id } = req.user;
+    const userId = _id;
     const data = await addBillService({
+      userId,
       cartId,
       paymentMethod,
       status,

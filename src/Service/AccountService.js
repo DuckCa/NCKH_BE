@@ -8,6 +8,8 @@ const {
 } = require("../Model/Index");
 const Cart = require("../Model/Cart");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const saltRounds = 10;
 const getAccountList = async (req) => {
   const data = await Account.findAll();
   const sanitizedData = data.map((item) => {
@@ -103,19 +105,20 @@ const addAccountService = async (
   console.log(
     `>>>>>>CHECK Before ACCOUNT: USERNAME: ${username}, EMAIL: ${email}, PASSWORD: ${password}, CARTID: ${cart}, BIO: ${bio} `
   );
+  const passwordDecoded = await bcrypt.hash(password, saltRounds);
   const data = await Account.create({
     username: username,
     email: email,
-    password: password,
+    password: passwordDecoded,
     cart: cart._id.toString(),
     bio: bio,
   });
 
-  const inputstring = userItem === "true";
-  const accountItem = await UserItem.create({
-    type: inputstring,
-    userId: data._id,
-  });
+  // const inputstring = userItem === "true";
+  // const accountItem = await UserItem.create({
+  //   type: inputstring,
+  //   userId: data._id,
+  // });
 
   console.log(
     `>>>>>>CHECK BEFORE MATCHTROLE, ACCOUNTID: ${data._id}, ROLEID: ${roleId}`

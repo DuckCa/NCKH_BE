@@ -8,6 +8,7 @@ function artistPermissions(can, cannot, user) {
   can("manage", "Item"); // CRUD và bán item
   can("create", "Request"); // Nhận request được thuê vẽ theo yêu cầu
   can("create", "Category", { type: "CreateCategory" });
+  can("manage", "userItem");
 }
 
 module.exports = artistPermissions;

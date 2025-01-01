@@ -14,7 +14,6 @@ const Bill = sequelize.define(
     cartId: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     paymentMethod: {
       type: DataTypes.STRING,

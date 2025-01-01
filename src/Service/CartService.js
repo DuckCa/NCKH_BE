@@ -25,9 +25,20 @@ const updateCartService = async (infor) => {
     throw new Error("Cart not found");
   }
 
-  // Thêm item mới vào mảng item (nếu chưa tồn tại)
-  if (!cart.item.includes(infor.item)) {
-    cart.item.push(infor.item);
+  // Kiểm tra giá trị của type
+  if (infor.type === "Add") {
+    // Thêm item mới vào mảng item (nếu chưa tồn tại)
+    if (!cart.item.includes(infor.item)) {
+      cart.item.push(infor.item);
+    }
+  } else if (infor.type === "Delete") {
+    // Xóa item trong mảng item (nếu có tồn tại)
+    const itemIndex = cart.item.indexOf(infor.item);
+    if (itemIndex !== -1) {
+      cart.item.splice(itemIndex, 1);
+    }
+  } else {
+    throw new Error("Invalid type. Type must be 'Add' or 'Delete'.");
   }
 
   // Lưu giỏ hàng đã cập nhật
