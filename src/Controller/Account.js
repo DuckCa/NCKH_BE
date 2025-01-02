@@ -66,15 +66,14 @@ const putAccount = async (req, res) => {
 
 const postAccount = async (req, res) => {
   try {
-    const { username, email, password, bio, roleId, userItem } = req.body;
+    const { username, email, password, bio, roleId } = req.body;
 
     const data = await addAccountService(
       username,
       email,
       password,
       bio,
-      roleId,
-      userItem
+      roleId
     );
     return res.status(200).json(data);
   } catch (error) {

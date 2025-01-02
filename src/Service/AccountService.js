@@ -85,14 +85,7 @@ const updateAccountService = async (infor) => {
   return data;
 };
 //Function dành cho admin để tạo các account đặc biệt
-const addAccountService = async (
-  username,
-  email,
-  password,
-  bio,
-  roleId,
-  userItem
-) => {
+const addAccountService = async (username, email, password, bio, roleId) => {
   const cart = await Cart.create({});
   const existingCart = await Cart.findById(cart._id);
 

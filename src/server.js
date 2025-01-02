@@ -26,10 +26,15 @@ const conn = require("./config/database");
 const path = require("path");
 const fs = require("fs");
 app.use(
+  cors({
+    origin: "*", // Cho phép tất cả
+  })
+);
+app.use(
   "/images",
   express.static(path.join(__dirname, "Public", "Items_e_commerce"))
 );
-app.use(cors());
+
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
