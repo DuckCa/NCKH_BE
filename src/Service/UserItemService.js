@@ -13,7 +13,19 @@ const getUserItemService = async (infor) => {
   });
   return data;
 };
-const addUserItemService = async () => {};
+const addUserItemService = async (infor) => {
+  try {
+    console.log(">>>CHECK user item:", infor);
+    const data = await UserItem.create({
+      item: infor.item,
+      type: infor.type,
+      userId: infor.userId,
+    });
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
 const updateUserItemService = async () => {};
 const deleteUserItemService = async () => {};
 module.exports = {

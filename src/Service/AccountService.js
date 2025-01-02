@@ -75,6 +75,8 @@ const updateAccountService = async (infor) => {
       email: infor.email,
       password: infor.password,
       bio: infor.bio,
+      coin: infor.coin,
+      level: infor.level,
     },
     {
       where: { _id: infor._id },

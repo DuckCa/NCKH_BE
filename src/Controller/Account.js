@@ -44,7 +44,8 @@ const getAccountById = async (req, res) => {
 };
 const putAccount = async (req, res) => {
   try {
-    const { _id, username, email, password, bio, roleId } = req.body;
+    const { _id, username, email, password, bio, roleId, coin, level } =
+      req.body;
 
     const data = await updateAccountService({
       _id,
@@ -53,6 +54,8 @@ const putAccount = async (req, res) => {
       password,
       bio,
       roleId,
+      coin,
+      level,
     });
     return res.status(200).json(data);
   } catch (error) {

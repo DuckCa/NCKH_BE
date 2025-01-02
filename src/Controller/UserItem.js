@@ -38,20 +38,13 @@ const putUserItem = async (req, res) => {
 
 const postUserItem = async (req, res) => {
   try {
-    const { username, email, password, bio, roleId, userItem } = req.body;
+    const { item, type, userId } = req.body;
 
-    const data = await addUserItemService(
-      username,
-      email,
-      password,
-      bio,
-      roleId,
-      userItem
-    );
+    const data = await addUserItemService({ item, type, userId });
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Error adding Account" });
+    return res.status(500).json({ message: "Error adding User Item!!" });
   }
 };
 
