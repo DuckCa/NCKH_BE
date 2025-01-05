@@ -48,10 +48,56 @@ const getItemList = async () => {
 
   return dataOutput;
 };
-const getItemById = async (_id) => {
+
+const getItemByCate = async (_id) => {
   try {
+    // Tìm tất cả items có category matching với _id
+    const data = await Item.find({ category: _id });
+
+    if (!data || data.length === 0) {
+      throw new Error("No items found for this category");
+    }
+
+    // Map qua từng item để lấy thông tin chi tiết
+    const itemsWithDetails = await Promise.all(
+      data.map(async (item) => {
+        // Xử lý artist
+        const listArtist = await Promise.all(
+          item.artist.map(async (artistId) => {
+            const artist = await Account.findOne({
+              where: { _id: artistId },
+            });
+            return artist ? artist.username : "Unknown Artist";
+          })
+        );
+
+        // Xử lý category
+        const listCategory = await Promise.all(
+          item.category.map(async (categoryId) => {
+            const category = await Category.findById(categoryId);
+            return category ? category.Name : "Unknown Category";
+          })
+        );
+
+        return {
+          ...item.toObject(),
+          artist: listArtist,
+          category: listCategory,
+        };
+      })
+    );
+
+    return itemsWithDetails;
+  } catch (error) {
+    console.error("Error in getItemByCate:", error);
+    throw error;
+  }
+};
+const getItemById = async (infor) => {
+  try {
+    console.log(">>>CHECK ITEM INFOR:", infor);
     // Tìm item bằng _id
-    const data = await Item.findById(_id);
+    const data = await Item.findById(infor._id);
     if (!data) {
       throw new Error("Item not found");
     }
@@ -77,11 +123,18 @@ const getItemById = async (_id) => {
     );
 
     // Trả về đối tượng mới với artist và category đã được thay thế
-    return {
-      ...data.toObject(), // Chuyển Mongoose document thành plain object
-      artist: listArtist,
-      category: listCategory,
-    };
+    if (infor?.getArtistId == 1) {
+      return {
+        ...data.toObject(),
+        category: listCategory,
+      };
+    } else {
+      return {
+        ...data.toObject(),
+        artist: listArtist,
+        category: listCategory,
+      };
+    }
   } catch (error) {
     console.error("Error in getItemById:", error);
     throw error; // Ném lỗi để xử lý ở nơi gọi hàm
@@ -208,6 +261,7 @@ const deleteItemService = async (_id) => {
 };
 module.exports = {
   getItemList,
+  getItemByCate,
   getItemById,
   addItemService,
   updateItemService,

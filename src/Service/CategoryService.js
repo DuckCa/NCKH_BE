@@ -11,12 +11,24 @@ const {
 
 const { json } = require("express");
 const mongoose = require("mongoose");
-const getCategoryList = async (req) => {
-  const data = await Category.find();
-
-  return data;
+const getCategoryList = async () => {
+  try {
+    const data = await Category.find();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return { message: "Error retrieving category!!" };
+  }
 };
-
+const getCategoryById = async (_id) => {
+  try {
+    const data = await Category.findById(_id);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return { message: "Error retrieving category!!" };
+  }
+};
 const updateCategoryService = async (infor) => {
   const data = await Category.updateOne(
     { _id: infor._id },
@@ -41,6 +53,7 @@ const deleteCategoryService = async (_id) => {
 };
 module.exports = {
   getCategoryList,
+  getCategoryById,
   addCategoryService,
   updateCategoryService,
   deleteCategoryService,

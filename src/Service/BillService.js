@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const {
   sequelize,
   Account,
@@ -9,20 +10,32 @@ const {
 } = require("../Model/Index");
 const Cart = require("../Model/Cart");
 const getBillService = async () => {
-  const data = await Bill.findAll();
+  try {
+    const data = await Bill.findAll();
+    const updatedData = await Promise.all(
+      data.map(async (item) => {
+        const objectId = new mongoose.Types.ObjectId(item.cartId);
+        const mapItem = await Cart.findById(objectId);
+        
+        if (!mapItem) {
+          return {
+            ...item.toJSON(),
+            productList: [],
+          };
+        }
 
-  // Sử dụng Promise.all để đợi tất cả các promise hoàn thành
-  const updatedData = await Promise.all(
-    data.map(async (item) => {
-      const mapItem = await Cart.findById(item.cartId);
-      return {
-        ...item.toJSON(), // Chuyển đổi Sequelize instance thành plain object (nếu cần)
-        productList: mapItem.item, // Thay thế cartId bằng danh sách sản phẩm
-      };
-    })
-  );
+        return {
+          ...item.toJSON(),
+          productList: mapItem.item,
+        };
+      })
+    );
 
-  return updatedData; // Trả về mảng đã được cập nhật
+    return updatedData;
+  } catch (error) {
+    console.error('Error in getBillService:', error);
+    throw error; // Ném lỗi để controller xử lý
+  }
 };
 const getBillByIdService = async (_id) => {
   try {
@@ -79,18 +92,6 @@ const addBillService = async (infor) => {
       status: infor.status,
       totalAmount: infor.totalAmount,
     });
-
-    if (data?.dataValues?.cartId) {
-      const findCart = await Cart.findById(data?.dataValues?.cartId);
-      console.log(">>>CHECK Cart for Bill:", findCart);
-      findCart?.item?.forEach(async (item) => {
-        const accountItem = await UserItem.create({
-          type: 0,
-          userId: infor.userId,
-          item: item.toString(),
-        });
-      });
-    }
     return data;
   } catch (error) {
     console.error(error);

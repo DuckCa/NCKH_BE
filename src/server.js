@@ -20,6 +20,7 @@ const categoryRouters = require("./Routes/categoryApi");
 const cartRouters = require("./Routes/cartApi");
 const billRouters = require("./Routes/billApi");
 const userItem = require("./Routes/userItemApi");
+const Income = require("./Routes/income");
 const { defaultDataService } = require("./Service/defaultData");
 // const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
@@ -42,6 +43,7 @@ app.use("/login", loginRoutes);
 app.use("/", itemRoutes, categoryRouters, accRoutes);
 app.use(
   "/user",
+  Income,
   billRouters,
   cartRouters,
   itemRoutes,

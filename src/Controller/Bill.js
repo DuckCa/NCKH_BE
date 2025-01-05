@@ -13,6 +13,7 @@ const getBills = async (req, res) => {
       const data = await getBillByIdService(req?.query?._id);
       return res.status(200).json(data);
     } else {
+      console.log(">>>>CHECK BILL:");
       const data = await getBillService();
       return res.status(200).json(data);
     }
@@ -36,10 +37,8 @@ const putBill = async (req, res) => {
 const postBill = async (req, res) => {
   try {
     const { cartId, paymentMethod, status, totalAmount } = req.body;
-    const { _id } = req.user;
-    const userId = _id;
+
     const data = await addBillService({
-      userId,
       cartId,
       paymentMethod,
       status,

@@ -16,35 +16,29 @@ const getCartById = async (_id) => {
 };
 
 const updateCartService = async (infor) => {
-  console.log(">>>CHECK Item from FE:", infor.item);
-
-  // Lấy giỏ hàng hiện tại
-  const cart = await Cart.findById(infor._id);
-  console.log(">>>>Check Cart:", cart);
-  if (!cart) {
-    throw new Error("Cart not found");
-  }
-
-  // Kiểm tra giá trị của type
-  if (infor.type === "Add") {
-    // Thêm item mới vào mảng item (nếu chưa tồn tại)
-    if (!cart.item.includes(infor.item)) {
-      cart.item.push(infor.item);
+  try {
+    let update;
+    if (infor.type === "Add") {
+      update = { $addToSet: { item: infor.item } };
+    } else if (infor.type === "Delete") {
+      update = { $pull: { item: infor.item } };
     }
-  } else if (infor.type === "Delete") {
-    // Xóa item trong mảng item (nếu có tồn tại)
-    const itemIndex = cart.item.indexOf(infor.item);
-    if (itemIndex !== -1) {
-      cart.item.splice(itemIndex, 1);
+
+    const updatedCart = await Cart.findOneAndUpdate(
+      { _id: infor._id },
+      update,
+      { new: true } // Trả về document sau khi update
+    );
+
+    if (!updatedCart) {
+      throw new Error("Cart not found");
     }
-  } else {
-    throw new Error("Invalid type. Type must be 'Add' or 'Delete'.");
+
+    return updatedCart;
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    throw error;
   }
-
-  // Lưu giỏ hàng đã cập nhật
-  const updatedCart = await cart.save();
-
-  return updatedCart;
 };
 
 module.exports = { getCartById, updateCartService };

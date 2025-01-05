@@ -1,5 +1,6 @@
 const {
   getItemList,
+  getItemByCate,
   getItemById,
   addItemService,
   updateItemService,
@@ -13,8 +14,24 @@ const mongoose = require("mongoose");
 const getItems = async (req, res) => {
   try {
     if (req?.query?._id) {
+      const { _id, getArtistId } = req.query;
+      const data = await getItemById({ _id, getArtistId });
+      return res.status(200).json(data);
+    } else {
+      const data = await getItemList();
+      return res.status(200).json(data);
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error retrieving Items" });
+  }
+};
+const getItemByCategory = async (req, res) => {
+  try {
+    if (req?.query?._id) {
       const { _id } = req.query;
-      const data = await getItemById(_id);
+      console.log("req?.query?._id:", _id);
+      const data = await getItemByCate(_id);
       return res.status(200).json(data);
     } else {
       const data = await getItemList();
@@ -104,4 +121,4 @@ const deleteItem = async (req, res) => {
   }
 };
 
-module.exports = { getItems, putItem, postItem, deleteItem };
+module.exports = { getItems, getItemByCategory, putItem, postItem, deleteItem };

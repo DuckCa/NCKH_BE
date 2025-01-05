@@ -6,6 +6,7 @@ const UserItem = require("./UserItem");
 const RequestHistory = require("./RequestHistory");
 const RequestType = require("./RequestType");
 const Bill = require("./Bill");
+const Income = require("./Income");
 Account.belongsToMany(Role, {
   through: MatchRole,
   foreignKey: "accountId",
@@ -31,6 +32,11 @@ Account.hasMany(UserItem, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+Account.hasMany(Income, {
+  foreignKey: "artistId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 //Tạo hooks để check xem loại request có RequestID đã bị xóa chưa, nếu bị xóa sẽ không hiển thị.
 
@@ -43,4 +49,5 @@ module.exports = {
   RequestHistory,
   RequestType,
   Bill,
+  Income,
 };

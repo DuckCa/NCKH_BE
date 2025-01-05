@@ -9,6 +9,8 @@ function artistPermissions(can, cannot, user) {
   can("create", "Request"); // Nhận request được thuê vẽ theo yêu cầu
   can("create", "Category", { type: "CreateCategory" });
   can("manage", "userItem");
+  can("create", "Income");
+  can("read", "Income");
 }
 
 module.exports = artistPermissions;

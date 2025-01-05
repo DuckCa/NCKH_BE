@@ -12,6 +12,7 @@ function normalUserPermissions(can, cannot, user) {
   can("manage", "Cart");
   can("create", "Bill");
   can("read", "Bill");
+  can("create", "Income");
 }
 
 module.exports = normalUserPermissions;

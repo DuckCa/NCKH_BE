@@ -1,5 +1,6 @@
 const {
   getCategoryList,
+  getCategoryById,
   addCategoryService,
   updateCategoryService,
   deleteCategoryService,
@@ -7,8 +8,15 @@ const {
 
 const getCategory = async (req, res) => {
   try {
-    const data = await getCategoryList(req);
-    return res.status(200).json(data);
+    if (req?.query?._id) {
+      const { _id } = req.query;
+      console.log("req?.query?._id:", _id);
+      const data = await getCategoryById(_id);
+      return res.status(200).json(data);
+    } else {
+      const data = await getCategoryList(req);
+      return res.status(200).json(data);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error retrieving category!!" });
