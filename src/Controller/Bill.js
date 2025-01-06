@@ -1,6 +1,7 @@
 const {
   getBillService,
   getBillByIdService,
+  getBillByYearService,
   addBillService,
   updateBillService,
   deleteBillService,
@@ -21,6 +22,16 @@ const getBills = async (req, res) => {
     return res.status(500).json({ message: "Error get Bill!" });
   }
 };
+const getBillsByYear = async (req, res) => {
+  try {
+    const year = req?.query?.year;
+    const data = await getBillByYearService(year);
+    return res.status(200).json(data);
+  } catch {
+    return res.status(500).json({ message: "Error get Bill!" });
+  }
+};
+
 const putBill = async (req, res) => {
   try {
     const { _RequestId, Name, Description } = req.body;
@@ -60,6 +71,7 @@ const deleteBill = async (req, res) => {
 };
 module.exports = {
   getBills,
+  getBillsByYear,
   putBill,
   postBill,
   deleteBill,

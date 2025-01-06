@@ -15,8 +15,9 @@ const getBillService = async () => {
     const updatedData = await Promise.all(
       data.map(async (item) => {
         const objectId = new mongoose.Types.ObjectId(item.cartId);
+
         const mapItem = await Cart.findById(objectId);
-        
+
         if (!mapItem) {
           return {
             ...item.toJSON(),
@@ -33,7 +34,7 @@ const getBillService = async () => {
 
     return updatedData;
   } catch (error) {
-    console.error('Error in getBillService:', error);
+    console.error("Error in getBillService:", error);
     throw error; // Ném lỗi để controller xử lý
   }
 };
@@ -84,6 +85,46 @@ const getBillByIdService = async (_id) => {
     throw error;
   }
 };
+const getBillByYearService = async (year) => {
+  try {
+    // Lấy tất cả các hóa đơn
+    const data = await Bill.findAll();
+
+    // Lọc các hóa đơn theo năm
+    const filteredData = data.filter((item) => {
+      const createdAtYear = new Date(item.createdAt).getFullYear();
+      console.log(">>>>CHECK YEAR:", createdAtYear);
+      return createdAtYear == year;
+    });
+    console.log(">>>>CHECK YEAR:", filteredData);
+    // Cập nhật thông tin sản phẩm cho từng hóa đơn
+    const updatedData = await Promise.all(
+      filteredData.map(async (item) => {
+        const objectId = new mongoose.Types.ObjectId(item.cartId);
+
+        const mapItem = await Cart.findById(objectId);
+
+        if (!mapItem) {
+          return {
+            ...item.toJSON(),
+            productList: [],
+          };
+        }
+
+        return {
+          ...item.toJSON(),
+          productList: mapItem.item,
+        };
+      })
+    );
+
+    return updatedData;
+  } catch (error) {
+    console.error("Error in getBillByYearService:", error);
+    throw error; // Ném lỗi để controller xử lý
+  }
+};
+
 const addBillService = async (infor) => {
   try {
     const data = await Bill.create({
@@ -104,6 +145,7 @@ const deleteBillService = async (_id) => {};
 module.exports = {
   getBillService,
   getBillByIdService,
+  getBillByYearService,
   addBillService,
   updateBillService,
   deleteBillService,
