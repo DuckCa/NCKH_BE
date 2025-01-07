@@ -84,7 +84,9 @@ const postAccount = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
   try {
-    const { _id } = req.body;
+    console.log(">>>CHECK ID DELETE:", req.query);
+    const { _id } = req.query;
+
     const data = await deleteAccountService(_id);
     return res.status(200).json(data);
   } catch (error) {
