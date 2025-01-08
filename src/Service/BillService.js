@@ -93,7 +93,6 @@ const getBillByYearService = async (year) => {
     // Lọc các hóa đơn theo năm
     const filteredData = data.filter((item) => {
       const createdAtYear = new Date(item.createdAt).getFullYear();
-      console.log(">>>>CHECK YEAR:", createdAtYear);
       return createdAtYear == year;
     });
     console.log(">>>>CHECK YEAR:", filteredData);

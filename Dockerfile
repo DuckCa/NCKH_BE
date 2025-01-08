@@ -1,28 +1,33 @@
-
-# Sử dụng Node.js LTS làm base image
+# Sử dụng image Node.js phiên bản 20
 FROM node:20
 
-# Thiết lập thư mục làm việc
+# Thiết lập thư mục làm việc trong container
 WORKDIR /src/server
+
+# Cài đặt các thư viện hệ thống cần thiết cho sharp
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libvips-dev \
+    python3 \
+    make \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 # Sao chép package.json và package-lock.json
 COPY package*.json ./
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
-# Cài đặt dependencies chỉ cho production
-RUN npm ci --only=production
+# Cài đặt dependencies với --platform
+RUN npm install --platform=linux --arch=x64 sharp
 
-# Thiết lập biến môi trường cho production
-ENV NODE_ENV production
+# Cài đặt các dependencies khác
+RUN npm install
 
-# Sao chép toàn bộ mã nguồn vào container
+# Sao chép toàn bộ mã nguồn
 COPY . .
 
-# Thiết lập cổng mặc định
+# Mở cổng 8050
 EXPOSE 8050
 
-# Chạy ứng dụng
+# Khởi chạy ứng dụng
 CMD ["node", "src/server.js"]
-
-
-

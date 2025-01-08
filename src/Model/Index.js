@@ -1,4 +1,4 @@
-const sequelize = require("../config/databaseOrac");
+const sequelize = require("../config/databaseMySQL");
 const Account = require("./Account");
 const Role = require("./Role");
 const MatchRole = require("./MatchRole");

@@ -25,6 +25,7 @@ const getBills = async (req, res) => {
 const getBillsByYear = async (req, res) => {
   try {
     const year = req?.query?.year;
+    console.log(">>>>CHECK BILL YEAR:", year);
     const data = await getBillByYearService(year);
     return res.status(200).json(data);
   } catch {
