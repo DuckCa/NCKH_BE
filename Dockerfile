@@ -19,7 +19,7 @@ RUN npm install --platform=linux --arch=x64
 COPY . .
 
 # Mở cổng 8050
-EXPOSE 8050
+EXPOSE 8070
 
 # Khởi chạy ứng dụng
 CMD ["node", "src/server.js"]
