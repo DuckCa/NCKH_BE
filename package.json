@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DuckCa/NCKH_BE#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.726.1",
     "@casl/ability": "^6.7.2",
     "bcryptjs": "^2.4.3",
     "canvas": "^3.0.0",

@@ -1,8 +1,28 @@
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env",
+});
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs").promises; // Sử dụng fs.promises
 const sharp = require("sharp");
 const { createCanvas, loadImage } = require("canvas");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
+// Cấu hình AWS SDK với timeout tăng lên
+const client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+  requestHandler: {
+    requestTimeout: 300 * 1000, // 300 giây
+  },
+});
+
+// Đường dẫn thư mục tạm thời
+const dirpath = path.join(__dirname, "../public/images/uploads");
+
+// Hàm tạo watermark (giữ nguyên)
 const createDiagonalWatermark = (
   text,
   width,
@@ -13,20 +33,16 @@ const createDiagonalWatermark = (
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
-  // Thiết lập font và màu sắc với độ trong suốt
   ctx.font = "bold 40px Arial";
   ctx.fillStyle = color;
-  ctx.globalAlpha = opacity; // Độ trong suốt
+  ctx.globalAlpha = opacity;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-
-  // Xoay text 45 độ
   ctx.rotate((-45 * Math.PI) / 180);
 
-  // Lặp lại text khắp ảnh
   const textWidth = ctx.measureText(text).width;
-  const textHeight = 50; // Chiều cao của text
-  const spacing = 200; // Khoảng cách giữa các text
+  const textHeight = 50;
+  const spacing = 200;
 
   for (let y = -height; y < height * 2; y += spacing) {
     for (let x = -width; x < width * 2; x += spacing) {
@@ -34,29 +50,23 @@ const createDiagonalWatermark = (
     }
   }
 
-  // Trả về buffer của hình ảnh watermark
   return canvas.toBuffer();
 };
 
-// Hàm chèn watermark vào ảnh gốc
+// Hàm chèn watermark (giữ nguyên)
 const addWatermark = async (inputImagePath, outputImagePath, text) => {
   try {
-    // Đọc ảnh gốc
     const image = await sharp(inputImagePath).toBuffer();
-
-    // Lấy kích thước ảnh gốc
     const metadata = await sharp(image).metadata();
     const { width, height } = metadata;
 
-    // Tạo watermark dạng text theo phương chéo và lặp lại
     const watermark = await createDiagonalWatermark(text, width, height);
 
-    // Chèn watermark vào ảnh gốc
     await sharp(image)
       .composite([
         {
           input: watermark,
-          blend: "over", // Chế độ blend
+          blend: "over",
         },
       ])
       .toFile(outputImagePath);
@@ -69,34 +79,71 @@ const addWatermark = async (inputImagePath, outputImagePath, text) => {
   }
 };
 
-// Hàm upload file và chèn watermark
+// Hàm upload file lên S3
 const uploadSingleFile = async (fileObject) => {
   let extname = path.extname(fileObject?.name);
   let basename = path.basename(fileObject?.name, extname);
   let realname = basename + "-" + Date.now() + extname;
-  let uploadPath = path.resolve(__dirname, "../Public/Items_e_commerce/");
+
+  // Đảm bảo thư mục tồn tại
+  try {
+    await fs.access(dirpath);
+  } catch (error) {
+    await fs.mkdir(dirpath, { recursive: true });
+  }
+
+  // Đường dẫn tạm thời để lưu ảnh gốc
+  const originalImagePath = path.join(dirpath, `temp_${realname}`);
+
+  // Đường dẫn tạm thời để lưu ảnh đã chèn watermark
+  const watermarkedImagePath = path.join(dirpath, `watermarked_${realname}`);
 
   try {
-    // Đường dẫn cho ảnh gốc
-    const originalImagePath = path.join(uploadPath, `original_${realname}`);
-
-    // Di chuyển file tải lên vào thư mục đích (lưu ảnh gốc)
+    // Di chuyển file tải lên vào thư mục tạm thời
     await fileObject.mv(originalImagePath);
-
-    // Đường dẫn cho ảnh đã chèn watermark
-    const watermarkedImagePath = path.join(
-      uploadPath,
-      `watermarked_${realname}`
-    );
 
     // Chèn watermark vào ảnh
     await addWatermark(originalImagePath, watermarkedImagePath, "WeDesign");
 
+    // Đọc ảnh gốc và ảnh đã chèn watermark
+    const originalImageBuffer = await fs.readFile(originalImagePath);
+    const watermarkedImageBuffer = await fs.readFile(watermarkedImagePath);
+
+    // Kiểm tra tên bucket
+    if (!process.env.AWS_BUCKET_NAME) {
+      throw new Error("Bucket name is not defined in environment variables.");
+    }
+
+    // Upload ảnh gốc lên S3
+    const originalUploadParams = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `BE_Graphic/Items_e_commerce/original/${realname}`,
+      Body: originalImageBuffer,
+      ContentType: fileObject.mimetype,
+    };
+
+    const originalCommand = new PutObjectCommand(originalUploadParams);
+    await client.send(originalCommand);
+
+    // Upload ảnh đã chèn watermark lên S3
+    const watermarkedUploadParams = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `BE_Graphic/Items_e_commerce/watermarked/${realname}`,
+      Body: watermarkedImageBuffer,
+      ContentType: fileObject.mimetype,
+    };
+
+    const watermarkedCommand = new PutObjectCommand(watermarkedUploadParams);
+    await client.send(watermarkedCommand);
+
+    console.log("Files uploaded to S3 successfully:", realname);
+
+    // Trả về link ảnh gốc và ảnh có watermark
     return {
       status: "success",
       paths: {
-        original: originalImagePath, // Đường dẫn ảnh gốc
-        watermarked: watermarkedImagePath, // Đường dẫn ảnh đã chèn watermark
+        original: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/BE_Graphic/Items_e_commerce/original/${realname}`,
+        watermarked: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/BE_Graphic/Items_e_commerce/watermarked/${realname}`,
       },
       error: null,
     };
@@ -107,58 +154,17 @@ const uploadSingleFile = async (fileObject) => {
       paths: null,
       error: JSON.stringify(error),
     };
-  }
-};
-
-// Hàm upload nhiều file (nếu cần)
-const uploadMultipleFile = async (fileArray) => {
-  if (!Array.isArray(fileArray) || fileArray.length === 0) {
-    return {
-      status: "failed",
-      path: null,
-      error: "fileArray is not an array or it is empty",
-    };
-  }
-
-  let dirpath = path.join(__dirname, "../public/images/uploads");
-
-  // Kiểm tra và tạo thư mục nếu không tồn tại
-  if (!fs.existsSync(dirpath)) {
-    fs.mkdirSync(dirpath, { recursive: true });
-  }
-
-  for (const element of fileArray) {
-    let extname = path.extname(element.name);
-    let basename = path.basename(element.name, extname);
-    let realname = JSON.stringify(basename + "-" + Date.now() + extname);
-    let uploadPath = path.join(dirpath, JSON.parse(realname));
-
+  } finally {
+    // Xóa file tạm thời (sử dụng unlink bất đồng bộ)
     try {
-      console.log(">>>>>> Check Success:", uploadPath);
-      await element.mv(uploadPath);
-      return {
-        status: "success",
-        path: JSON.parse(realname),
-        error: JSON.stringify(error),
-      };
+      await fs.unlink(originalImagePath).catch(() => {});
+      await fs.unlink(watermarkedImagePath).catch(() => {});
     } catch (error) {
-      console.log(">>>>>> ERROR:", uploadPath);
-      return {
-        status: "failed",
-        path: null,
-        error: JSON.stringify(error),
-      };
+      console.error("Error deleting temporary files:", error);
     }
   }
-
-  return {
-    status: "success",
-    path: "link-image", // Bạn có thể thay đổi đường dẫn này để phản ánh đúng đường dẫn URL
-    error: null,
-  };
 };
 
 module.exports = {
   uploadSingleFile,
-  uploadMultipleFile,
 };
