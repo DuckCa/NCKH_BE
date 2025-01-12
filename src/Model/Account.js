@@ -51,7 +51,7 @@ const Account = sequelize.define(
 
 // Synchronize the model with the database
 //{ force: true }
-sequelize.sync().then(() => {
+sequelize.sync({ force: true }).then(() => {
   console.log("User table created!");
 });
 

@@ -10,14 +10,14 @@ const sequelize = new Sequelize(
   process.env.DB_MYSQL_USER,
   process.env.DB_MYSQL_PASSWORD,
   {
-    host: process.env.DB_HOST,
+    host: process.env.DB_MYSQL_HOST,
     port: process.env.DB_MYSQL_PORT,
     dialect: "mysql",
     logging: console.log, // Log mọi truy vấn
   }
 );
 
-console.log(">>>>>>>>>CHECK PASSWORD:", process.env.DB_PASSWORD);
+console.log(">>>>>>>>>CHECK PASSWORD:", process.env.DB_MYSQL_PASSWORD);
 console.log(">>>>>>>>>CHECK Node_Mode:", process.env.NODE_ENV);
 console.log(">>>>>>>>>CHECK Connect:", sequelize.config);
 const connectToDatabase = async () => {
