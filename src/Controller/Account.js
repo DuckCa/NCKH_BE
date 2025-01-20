@@ -33,6 +33,7 @@ const getAccounts = async (req, res) => {
     return res.status(500).json({ message: "Error retrieving Accounts" });
   }
 };
+
 const getAccountById = async (req, res) => {
   try {
     const data = await getAccountByIdService(req.query.id);
