@@ -33,9 +33,9 @@ const getAccountByRoleService = async (_id) => {
 
   return accounts;
 };
-const getAccountByIdService = async (req) => {
+const getAccountByIdService = async (id) => {
   const data = await Account.findOne({
-    where: { _id: req.query._id ?? req.user._id },
+    where: { _id: id },
   });
 
   const { password, ...rest } = data.dataValues;
