@@ -8,13 +8,39 @@ const {
 } = require("../Model/Index");
 const Cart = require("../Model/Cart");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const saltRounds = 10;
 const getAccountList = async (req) => {
   const data = await Account.findAll();
-  return data;
+  const sanitizedData = data.map((item) => {
+    const { password, ...rest } = item.dataValues;
+    return rest;
+  });
+  return sanitizedData;
 };
-const getAccountByIdService = async (id) => {
-  const data = await Account.findById(id);
-  return data;
+const getAccountByRoleService = async (_id) => {
+  const getRoleUser = await MatchRole.findAll({
+    where: { roleId: _id },
+  });
+
+  // Lấy danh sách accountId từ kết quả của MatchRole.findAll
+  const accountIds = getRoleUser.map((role) => role.dataValues.accountId);
+
+  // Dùng Promise.all để tìm tất cả các account bằng Account.findByPk
+  const accounts = await Promise.all(
+    accountIds.map((id) => Account.findByPk(id))
+  );
+
+  return accounts;
+};
+const getAccountByIdService = async (req) => {
+  const data = await Account.findOne({
+    where: { _id: req.query._id ?? req.user._id },
+  });
+
+  const { password, ...rest } = data.dataValues;
+
+  return rest;
 };
 const updateAccountService = async (infor) => {
   const findUserById = await MatchRole.findOne({
@@ -49,6 +75,8 @@ const updateAccountService = async (infor) => {
       email: infor.email,
       password: infor.password,
       bio: infor.bio,
+      coin: infor.coin,
+      level: infor.level,
     },
     {
       where: { _id: infor._id },
@@ -57,14 +85,7 @@ const updateAccountService = async (infor) => {
   return data;
 };
 //Function dành cho admin để tạo các account đặc biệt
-const addAccountService = async (
-  username,
-  email,
-  password,
-  bio,
-  roleId,
-  userItem
-) => {
+const addAccountService = async (username, email, password, bio, roleId) => {
   const cart = await Cart.create({});
   const existingCart = await Cart.findById(cart._id);
 
@@ -79,19 +100,20 @@ const addAccountService = async (
   console.log(
     `>>>>>>CHECK Before ACCOUNT: USERNAME: ${username}, EMAIL: ${email}, PASSWORD: ${password}, CARTID: ${cart}, BIO: ${bio} `
   );
+  const passwordDecoded = await bcrypt.hash(password, saltRounds);
   const data = await Account.create({
     username: username,
     email: email,
-    password: password,
-    cart: JSON.stringify(cart._id),
+    password: passwordDecoded,
+    cart: cart._id.toString(),
     bio: bio,
   });
 
-  const inputstring = userItem === "true";
-  const accountItem = await UserItem.create({
-    type: inputstring,
-    userId: data._id,
-  });
+  // const inputstring = userItem === "true";
+  // const accountItem = await UserItem.create({
+  //   type: inputstring,
+  //   userId: data._id,
+  // });
 
   console.log(
     `>>>>>>CHECK BEFORE MATCHTROLE, ACCOUNTID: ${data._id}, ROLEID: ${roleId}`
@@ -112,13 +134,16 @@ const deleteAccountService = async (_id) => {
   const delMatchRole = await MatchRole.destroy({ where: { accountId: _id } });
   console.log(">>>>>>>CHECK CART:", account.cart);
   const delCart = await Cart.delete({
-    _id: account.cart.replace(/"/g, ""),
+    _id: account.cart,
+    // _id: account.cart.replace(/"/g, "") code cũ
   });
 
   return data;
 };
 module.exports = {
   getAccountList,
+  getAccountByRoleService,
+  getAccountByIdService,
   addAccountService,
   updateAccountService,
   deleteAccountService,

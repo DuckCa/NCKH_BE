@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 // Import the Sequelize Oracle connection instance
-const sequelize = require("../config/databaseOrac");
+const sequelize = require("../config/databaseMySQL");
 
 const Role = sequelize.define(
   "Role",

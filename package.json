@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "build": "npm rebuild canvas && npm install"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,10 @@
   },
   "homepage": "https://github.com/DuckCa/NCKH_BE#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.726.1",
+    "@casl/ability": "^6.7.2",
     "bcryptjs": "^2.4.3",
+    "canvas": "^3.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
@@ -27,8 +31,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.2",
     "mongoose-delete": "^1.0.2",
+    "mysql2": "^3.12.0",
     "nodemon": "^3.1.7",
-    "oracledb": "^6.6.0",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "sharp": "^0.33.5"
+  },
+  "optionalDependencies": {
+    "@img/sharp-win32-x64": "^0.33.5"
   }
 }

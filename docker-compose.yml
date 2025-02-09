@@ -3,48 +3,49 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: host
     container_name: backend
+    environment:
+      NODE_ENV: development
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: mem1
+      DB_PASSWORD: 123
+      DB_NAME: GRAPHIC
+      HOST_NAME: localhost
+      PORT: 8050
+      JWT_SECRET: 9Hv0b7XJJGwSpaZxRYd2bBuhFzw0PtLM
+      JWT_EXPIRE: 1d
     ports:
       - "8050:8050"
-    env_file:
-      - .env.prod
-    volumes:
-      - .:/app
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:8050/health"] # Đảm bảo endpoint này tồn tại
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  oracle:
-    image: gvenzl/oracle-free:latest
-    container_name: oracle-db
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
-      custom_network:
-        ipv4_address: 192.168.1.100  # Đặt địa chỉ IP tĩnh cho container
-    ports:
-      - "1522:1521"
+      - mysql_network
     volumes:
-      - oracle-data:/opt/oracle/oradata
-      - ./tnsnames.ora:/opt/oracle/homes/OraDBFree/network/admin/tnsnames.ora
+      - .:/src/server
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
     environment:
-      ORACLE_PASSWORD: "123456" # Đặt mật khẩu bạn muốn
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: GRAPHIC
+      MYSQL_USER: mem1
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Mount init script
+    networks:
+      - mysql_network
     healthcheck:
-      test: ["CMD", "tnsping", "127.0.0.1:1521"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
 volumes:
-  oracle-data:
+  mysql_data:
 
 networks:
-  custom_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.1.0/24  # Đặt dải mạng
-
-
+  mysql_network:

@@ -1,15 +1,33 @@
 const {
   getAccountList,
+  getAccountByRoleService,
   getAccountByIdService,
   addAccountService,
   updateAccountService,
   deleteAccountService,
 } = require("../Service/AccountService");
 
+const getAccountByRole = async (req, res) => {
+  const roleId = req.query._id;
+  const data = await getAccountByRoleService(roleId);
+  return res.status(200).json(data);
+};
 const getAccounts = async (req, res) => {
   try {
-    const data = await getAccountList(req);
-    return res.status(200).json(data);
+    let data;
+
+    if (req?.query?._id || req?.user?._id) {
+      const id = req.query._id;
+      data = await getAccountByIdService(req);
+    } else {
+      data = await getAccountList(req);
+    }
+
+    if (!data || data.length === 0) {
+      // Kiểm tra thêm data.length === 0 nếu cần
+      return res.status(404).json({ message: "No accounts found" });
+    }
+    return res.status(200).json({ role: req?.user?.userRole, data });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error retrieving Accounts" });
@@ -17,7 +35,7 @@ const getAccounts = async (req, res) => {
 };
 const getAccountById = async (req, res) => {
   try {
-    const data = await getAccountByIdService(req.param);
+    const data = await getAccountByIdService(req.query.id);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -26,7 +44,8 @@ const getAccountById = async (req, res) => {
 };
 const putAccount = async (req, res) => {
   try {
-    const { _id, username, email, password, bio, roleId } = req.body;
+    const { _id, username, email, password, bio, roleId, coin, level } =
+      req.body;
 
     const data = await updateAccountService({
       _id,
@@ -35,6 +54,8 @@ const putAccount = async (req, res) => {
       password,
       bio,
       roleId,
+      coin,
+      level,
     });
     return res.status(200).json(data);
   } catch (error) {
@@ -45,15 +66,14 @@ const putAccount = async (req, res) => {
 
 const postAccount = async (req, res) => {
   try {
-    const { username, email, password, bio, roleId, userItem } = req.body;
+    const { username, email, password, bio, roleId } = req.body;
 
     const data = await addAccountService(
       username,
       email,
       password,
       bio,
-      roleId,
-      userItem
+      roleId
     );
     return res.status(200).json(data);
   } catch (error) {
@@ -64,7 +84,9 @@ const postAccount = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
   try {
-    const { _id } = req.body;
+    console.log(">>>CHECK ID DELETE:", req.query);
+    const { _id } = req.query;
+
     const data = await deleteAccountService(_id);
     return res.status(200).json(data);
   } catch (error) {
@@ -75,6 +97,7 @@ const deleteAccount = async (req, res) => {
 
 module.exports = {
   getAccounts,
+  getAccountByRole,
   getAccountById,
   putAccount,
   postAccount,

@@ -23,26 +23,34 @@ const loginService = async (email, password) => {
   if (data) {
     const isMatchPassword = await bcrypt.compare(password, data?.password);
     if (isMatchPassword) {
-      const payload = {
-        email: data.email,
-        username: data.username,
-      };
-      const access_token = await jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE,
-      });
-      console.log(">>>>>>>CHECK TOKEN:", access_token);
       const userRole = await MatchRole.findAll({
         where: {
           accountId: data._id,
         },
       });
+      const roleIds = userRole.map((role) => role.dataValues.roleId);
+
+      console.log(">>>>>>>>>>>CHECK USER BEFORE RETURN:", roleIds); // Kết quả: Mảng chứa các giá trị roleId
+      const payload = {
+        _id: data._id,
+        email: data.email,
+        username: data.username,
+        userRole: roleIds,
+      };
+      console.log(">>>>>CHECK PAYLOAD:", payload);
+      const access_token = await jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE,
+      });
+      console.log(">>>>>>>CHECK TOKEN:", access_token);
+
       return {
         EC: 0,
         access_token,
         user: {
+          _id: data._id,
           email: data.email,
           username: data.username,
-          userRole: userRole.roleId,
+          userRole: roleIds,
         },
       };
     } else {

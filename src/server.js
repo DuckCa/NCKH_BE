@@ -14,37 +14,77 @@ const loginRoutes = require("./Routes/loginApi");
 const roleRoutes = require("./Routes/roleApi");
 const accRoutes = require("./Routes/accApi");
 const itemRoutes = require("./Routes/itemApi");
-const sequelize = require("./config/databaseOrac");
+const sequelize = require("./config/databaseMySQL");
 const requestRouters = require("./Routes/requestApi");
-const { defaultDataService } = require("./Service/defaultData");
+const categoryRouters = require("./Routes/categoryApi");
+const cartRouters = require("./Routes/cartApi");
+const billRouters = require("./Routes/billApi");
+const userItem = require("./Routes/userItemApi");
+const Income = require("./Routes/income");
+const { defaultDataService, getCategoryLists, getItemLists } = require("./Service/defaultData");
+const { defaultDataCountItem } = require("./Service/defaultData");
 // const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
-app.use(cors());
+const path = require("path");
+const fs = require("fs");
+const { default: mongoose } = require("mongoose");
+const connection = require("./config/database");
+app.use(
+  cors({
+    origin: "*", // Cho phép tất cả
+  })
+);
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "Public", "Items_e_commerce"))
+);
+
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// app.use("/",);
 app.use("/login", loginRoutes);
-app.use("/user", accRoutes);
-app.use("/user/sale", itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
-// app.use("/user/manager");
-app.use("/user/admin", roleRoutes, requestRouters);
+app.use("/", itemRoutes, categoryRouters, accRoutes);
+app.use(
+  "/user",
+  Income,
+  billRouters,
+  cartRouters,
+  itemRoutes,
+  requestRouters,
+  accRoutes
+);
+app.use("/user/sale", userItem, categoryRouters, itemRoutes, requestRouters); //không cần account vì cả sale và manager đều bắt đầu từ user
+app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
 
 // app.use("/");
 // app.use("/login", loginRoutes);
-app.use("/user", accRoutes);
 // app.use("/user/sale", itemRoutes); //không cần accrount vì cả sale và manager đều bắt đầu từ user
 // // app.use("/user/manager");
 // app.use("/user/admin", roleRoutes);
+//const mongoose = require('mongoose');
+
 
 (async () => {
   try {
-    //Connect for mongonoose
+    console.log("👉 Calling defaultDataCountItem()..."); 
     await sequelize.authenticate();
     await conn();
     console.log(typeof defaultDataService);
     await defaultDataService();
+    await connection();
+    await getCategoryLists();
+    await getItemLists();
+
+    console.log("👉 Calling defaultDataCountItem()..."); 
+    await defaultDataCountItem();
+    console.log("✅ Finished calling defaultDataCountItem()");
+    
+    // Cập nhật số lượng item trong category mỗi 5 phút (300,000 ms)
+    setInterval(async () => {
+      console.log("🔄 [AUTO UPDATE] Running defaultDataCountItem()...");
+      await defaultDataCountItem();
+      console.log("✅ [AUTO UPDATE] Finished defaultDataCountItem()");
+    }, 300000); // 5 phút
 
     app.listen(port, hostname, () => {
       console.log(`Server running at http://${hostname}:${port}/`);
@@ -53,3 +93,4 @@ app.use("/user", accRoutes);
     console.log(">>>>>>>>ERRO CONNECT TO DB:", error);
   }
 })();
+

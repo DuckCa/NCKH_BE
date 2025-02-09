@@ -1,10 +1,12 @@
-const sequelize = require("../config/databaseOrac");
+const sequelize = require("../config/databaseMySQL");
 const Account = require("./Account");
 const Role = require("./Role");
 const MatchRole = require("./MatchRole");
 const UserItem = require("./UserItem");
 const RequestHistory = require("./RequestHistory");
 const RequestType = require("./RequestType");
+const Bill = require("./Bill");
+const Income = require("./Income");
 Account.belongsToMany(Role, {
   through: MatchRole,
   foreignKey: "accountId",
@@ -25,11 +27,17 @@ RequestType.belongsToMany(Account, {
   through: RequestHistory,
   foreignKey: "_RequestId",
 });
-Account.hasOne(UserItem, {
+Account.hasMany(UserItem, {
   foreignKey: "userId",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+Account.hasMany(Income, {
+  foreignKey: "artistId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
 //Tạo hooks để check xem loại request có RequestID đã bị xóa chưa, nếu bị xóa sẽ không hiển thị.
 
 module.exports = {
@@ -40,4 +48,6 @@ module.exports = {
   UserItem,
   RequestHistory,
   RequestType,
+  Bill,
+  Income,
 };

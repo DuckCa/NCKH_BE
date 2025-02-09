@@ -7,9 +7,13 @@ const {
   postRole,
   deleteRole,
 } = require("../Controller/Role");
-router.get("/role", getRoles);
-router.get("/matchrole", getMatchRoles);
-router.put("/role", putRole); // cập nhập data
-router.post("/role", postRole); //thêm data
-router.delete("/role", deleteRole);
+
+const author = require("../Middleware/author.js");
+const authen = require("../Middleware/authen.js");
+router.all("*", authen);
+router.get("/role", author("manage", "Role"), getRoles);
+router.get("/matchrole", author("manage", "Role"), getMatchRoles);
+router.put("/role", author("manage", "Role"), putRole); // cập nhập data
+router.post("/role", author("manage", "Role"), postRole); //thêm data
+router.delete("/role", author("manage", "Role"), deleteRole);
 module.exports = router;

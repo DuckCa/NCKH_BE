@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 // Import the Sequelize Oracle connection instance
-const sequelize = require("../config/databaseOrac");
+const sequelize = require("../config/databaseMySQL");
 
 const Bill = sequelize.define(
   "Bill",
@@ -14,7 +14,6 @@ const Bill = sequelize.define(
     cartId: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     paymentMethod: {
       type: DataTypes.STRING,
