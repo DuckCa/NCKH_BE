@@ -49,6 +49,21 @@ const Account = sequelize.define(
   }
 );
 
+// sequelize
+//   .query("SET FOREIGN_KEY_CHECKS = 0")
+//   .then(() => {
+//     return sequelize.sync({ force: true });
+//   })
+//   .then(() => {
+//     return sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
+//   })
+//   .then(() => {
+//     console.log("Database synced successfully!");
+//   })
+//   .catch((err) => {
+//     console.error("Error syncing database:", err);
+//   });
+
 // Synchronize the model with the database
 //{ force: true }
 sequelize.sync().then(() => {
@@ -56,42 +71,3 @@ sequelize.sync().then(() => {
 });
 
 module.exports = Account;
-
-// const mongoose = require("mongoose");
-// const mongoose_delete = require("mongoose-delete");
-
-// const accountSchema = mongoose.Schema(
-//   {
-//     userName: {
-//       type: String,
-//       required: true,
-//       unique: true,
-//     },
-//     email: {
-//       type: String,
-//       required: true,
-//       unique: true,
-//     },
-//     password: {
-//       type: String,
-//       required: true,
-//     },
-//     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "cart" }],
-//     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "item" }],
-//     coin: mongoose.Schema.Types.Decimal128,
-//     level: Number,
-//     bio: String,
-//     portfolio: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "item",
-//       default: null,
-//     },
-//   },
-//   {
-//     timestamps: true,
-//   }
-// );
-// accountSchema.plugin(mongoose_delete, { overrideMethods: "all" });
-// const Account = mongoose.model("Account", accountSchema);
-
-// module.exports = Account;

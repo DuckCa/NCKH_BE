@@ -1,6 +1,7 @@
 const {
   getItemList,
   getItemByCate,
+  getItemByArtistId,
   getItemById,
   addItemService,
   updateItemService,
@@ -37,6 +38,17 @@ const getItemByCategory = async (req, res) => {
       const data = await getItemList();
       return res.status(200).json(data);
     }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error retrieving Items" });
+  }
+};
+const getItemsByArtist = async (req, res) => {
+  try {
+    const { _id } = req.query;
+    console.log("req?.query?._id:", _id);
+    const data = await getItemByArtistId(_id);
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error retrieving Items" });
@@ -121,4 +133,11 @@ const deleteItem = async (req, res) => {
   }
 };
 
-module.exports = { getItems, getItemByCategory, putItem, postItem, deleteItem };
+module.exports = {
+  getItems,
+  getItemByCategory,
+  getItemsByArtist,
+  putItem,
+  postItem,
+  deleteItem,
+};

@@ -133,11 +133,56 @@ const getItemById = async (infor) => {
         ...data.toObject(),
         artist: listArtist,
         category: listCategory,
+        artistId: data.artist,
       };
     }
   } catch (error) {
     console.error("Error in getItemById:", error);
     throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+  }
+};
+const getItemByArtistId = async (_id) => {
+  try {
+    // Tìm tất cả items có category matching với _id
+    const data = await Item.find({ artist: _id });
+
+    if (!data || data.length === 0) {
+      throw new Error("No items found for this artist");
+    }
+
+    // Map qua từng item để lấy thông tin chi tiết
+    const itemsWithDetails = await Promise.all(
+      data.map(async (item) => {
+        // Xử lý artist
+        const listArtist = await Promise.all(
+          item.artist.map(async (artistId) => {
+            const artist = await Account.findOne({
+              where: { _id: artistId },
+            });
+            return artist ? artist.username : "Unknown Artist";
+          })
+        );
+
+        // Xử lý category
+        const listCategory = await Promise.all(
+          item.category.map(async (categoryId) => {
+            const category = await Category.findById(categoryId);
+            return category ? category.Name : "Unknown Category";
+          })
+        );
+
+        return {
+          ...item.toObject(),
+          artist: listArtist,
+          category: listCategory,
+        };
+      })
+    );
+
+    return itemsWithDetails;
+  } catch (error) {
+    console.error("Error in getItemByArtist:", error);
+    throw error;
   }
 };
 const updateItemService = async (infor) => {
@@ -263,6 +308,7 @@ module.exports = {
   getItemList,
   getItemByCate,
   getItemById,
+  getItemByArtistId,
   addItemService,
   updateItemService,
   deleteItemService,

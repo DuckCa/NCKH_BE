@@ -29,7 +29,7 @@ const RequestHistory = sequelize.define(
     timestamps: true, // Bật timestamps
   }
 );
-
+//{ force: true }
 sequelize.sync().then(() => {
   console.log("User table created!");
 });
