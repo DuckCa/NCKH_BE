@@ -32,7 +32,11 @@ const getCategoryById = async (_id) => {
 const updateCategoryService = async (infor) => {
   const data = await Category.updateOne(
     { _id: infor._id },
-    { Name: infor.Name, Description: infor.Description }
+    {
+      Name: infor.Name,
+      Description: infor.Description,
+      TotalItem: infor.TotalItem,
+    }
   );
 
   return data;

@@ -24,8 +24,13 @@ const getCategory = async (req, res) => {
 };
 const putCategory = async (req, res) => {
   try {
-    const { _id, Name, Description } = req.body;
-    const data = await updateCategoryService({ _id, Name, Description });
+    const { _id, Name, Description, TotalItem } = req.body;
+    const data = await updateCategoryService({
+      _id,
+      Name,
+      Description,
+      TotalItem,
+    });
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

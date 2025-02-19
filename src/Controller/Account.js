@@ -36,8 +36,7 @@ const getAccounts = async (req, res) => {
 
 const getAccountById = async (req, res) => {
   try {
-    const { id } = req.query;
-    const data = await getAccountByIdService(id);
+    const data = await getAccountByIdService(req);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

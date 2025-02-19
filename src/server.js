@@ -21,8 +21,13 @@ const cartRouters = require("./Routes/cartApi");
 const billRouters = require("./Routes/billApi");
 const userItem = require("./Routes/userItemApi");
 const Income = require("./Routes/income");
-const { defaultDataService, getCategoryLists, getItemLists } = require("./Service/defaultData");
-const { defaultDataCountItem } = require("./Service/defaultData");
+const {
+  defaultDataService,
+  defaultDataCountItem,
+  getCategoryLists,
+  getItemLists,
+} = require("./Service/defaultData");
+
 // const categoryRouters = require("./Routes/categoryApi");
 const conn = require("./config/database");
 const path = require("path");
@@ -63,22 +68,17 @@ app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
 // app.use("/user/admin", roleRoutes);
 //const mongoose = require('mongoose');
 
-
 (async () => {
   try {
-    console.log("👉 Calling defaultDataCountItem()..."); 
+    console.log("👉 Calling defaultDataCountItem()...");
     await sequelize.authenticate();
     await conn();
-    console.log(typeof defaultDataService);
     await defaultDataService();
     await connection();
     await getCategoryLists();
     await getItemLists();
-
-    console.log("👉 Calling defaultDataCountItem()..."); 
     await defaultDataCountItem();
-    console.log("✅ Finished calling defaultDataCountItem()");
-    
+
     // Cập nhật số lượng item trong category mỗi 5 phút (300,000 ms)
     setInterval(async () => {
       console.log("🔄 [AUTO UPDATE] Running defaultDataCountItem()...");
@@ -93,4 +93,3 @@ app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
     console.log(">>>>>>>>ERRO CONNECT TO DB:", error);
   }
 })();
-
