@@ -306,11 +306,8 @@ const deleteItemService = async (_id) => {
   return data;
 };
 module.exports = {
-  getItemList,
-  getItemByCate,
-  getItemById,
-  getItemByArtistId,
-  addItemService,
-  updateItemService,
-  deleteItemService,
+  getTermByIdService,
+  addTermService,
+  updateTermByIdService,
+  deleteTermByIdService,
 };

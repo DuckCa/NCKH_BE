@@ -9,6 +9,7 @@ function guestPermissions(can, cannot, id) {
   // Xem thông tin chi tiết của Artist
   can("read", "Category");
   can("manage", "userItem");
+  can("manage", "Term");
 }
 
 module.exports = guestPermissions;

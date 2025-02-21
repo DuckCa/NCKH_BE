@@ -79,12 +79,12 @@ app.use("/user/admin", roleRoutes, requestRouters, itemRoutes, categoryRouters);
     await getItemLists();
     await defaultDataCountItem();
 
-    // Cập nhật số lượng item trong category mỗi 5 phút (300,000 ms)
-    setInterval(async () => {
-      console.log("🔄 [AUTO UPDATE] Running defaultDataCountItem()...");
-      await defaultDataCountItem();
-      console.log("✅ [AUTO UPDATE] Finished defaultDataCountItem()");
-    }, 300000); // 5 phút
+    // // Cập nhật số lượng item trong category mỗi 5 phút (300,000 ms)
+    // setInterval(async () => {
+    //   console.log("🔄 [AUTO UPDATE] Running defaultDataCountItem()...");
+    //   await defaultDataCountItem();
+    //   console.log("✅ [AUTO UPDATE] Finished defaultDataCountItem()");
+    // }, 300000); // 5 phút
 
     app.listen(port, hostname, () => {
       console.log(`Server running at http://${hostname}:${port}/`);
